@@ -1,0 +1,7 @@
+/* npx @tailwindcss/cli -i ./public/stylesheets/input.css -o ./public/stylesheets/style.css --watch */
+@import "tailwindcss";
+
+body {
+
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}

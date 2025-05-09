@@ -1,78 +1,22 @@
-const express = require("express");
-const router = express.Router();
-const dbConn = require("../lib/db");
+var express = require("express");
+var router = express.Router();
+var dbConn = require("../lib/db");
 
-// mostrar la página de libros con búsqueda y paginación
+// Mostrar pagina de libros
 router.get("/", function (req, res, next) {
-  // Obtener el número de página de los parámetros de consulta, predeterminado a 1
-  const page = parseInt(req.query.page) || 1;
-  const limit = 5; // Number of books per page
-  const offset = (page - 1) * limit;
-
-  // Obtener el término de búsqueda de los parámetros de consulta
-  const searchTerm = req.query.search || "";
-
-  //prepararr la consulta según si hay un término de búsqueda
-  let query, countQuery;
-  let queryParams = [];
-
-  if (searchTerm) {
-    // Si existe un término de búsqueda, busque en los campos de nombre y autor
-    query =
-      "SELECT * FROM books WHERE name LIKE ? OR author LIKE ? ORDER BY id DESC LIMIT ? OFFSET ?";
-    countQuery =
-      "SELECT COUNT(*) as total FROM books WHERE name LIKE ? OR author LIKE ?";
-    const searchPattern = `%${searchTerm}%`;
-    queryParams = [searchPattern, searchPattern, limit, offset];
-    countQueryParams = [searchPattern, searchPattern];
-  } else {
-    // Si no hay término de búsqueda, obtenga todos los libros con paginación
-    query = "SELECT * FROM books ORDER BY id DESC LIMIT ? OFFSET ?";
-    countQuery = "SELECT COUNT(*) as total FROM books";
-    queryParams = [limit, offset];
-    countQueryParams = [];
-  }
-
-  //Ejecutar la consulta de conteo para obtener el número total de libros (para la paginación)
-  dbConn.query(countQuery, countQueryParams, function (countErr, countResult) {
-    if (countErr) {
-      req.flash("error", countErr);
-      res.render("books", {
-        data: "",
-        currentPage: 1,
-        totalPages: 1,
-        searchTerm: searchTerm,
-      });
-      return;
+  dbConn.query("SELECT * FROM books ORDER BY id desc", function (err, rows) {
+    if (err) {
+      req.flash("error", err);
+      // render to views/books/index.ejs
+      res.render("books", { data: "" });
+    } else {
+      // render to views/books/index.ejs
+      res.render("books", { data: rows });
     }
-
-    const totalBooks = countResult[0].total;
-    const totalPages = Math.ceil(totalBooks / limit);
-
-    //Ejecutar la consulta principal para obtener los libros de la página actual
-    dbConn.query(query, queryParams, function (err, rows) {
-      if (err) {
-        req.flash("error", err);
-        res.render("books", {
-          data: "",
-          currentPage: 1,
-          totalPages: 1,
-          searchTerm: searchTerm,
-        });
-      } else {
-        // render to views/books/index.ejs
-        res.render("books", {
-          data: rows,
-          currentPage: page,
-          totalPages: totalPages,
-          searchTerm: searchTerm,
-        });
-      }
-    });
   });
 });
 
-// Renderizar la página de agregar libro
+// mostrar pagina de agregar libro
 router.get("/add", function (req, res, next) {
   // render to add.ejs
   res.render("books/add", {
@@ -81,7 +25,7 @@ router.get("/add", function (req, res, next) {
   });
 });
 
-// agregar un nuevo libro
+// add a new book
 router.post("/add", function (req, res, next) {
   let name = req.body.name;
   let author = req.body.author;
@@ -90,7 +34,7 @@ router.post("/add", function (req, res, next) {
   if (name.length === 0 || author.length === 0) {
     errors = true;
 
-    // mensaje flash
+    // set flash message
     req.flash("error", "Por favor ingresar nombre y autor");
     // render to add.ejs with flash message
     res.render("books/add", {
@@ -101,12 +45,12 @@ router.post("/add", function (req, res, next) {
 
   // if no error
   if (!errors) {
-    const form_data = {
+    var form_data = {
       name: name,
       author: author,
     };
 
-    // Consulta de insertar
+    // insert query
     dbConn.query("INSERT INTO books SET ?", form_data, function (err, result) {
       //if(err) throw err
       if (err) {
@@ -118,14 +62,14 @@ router.post("/add", function (req, res, next) {
           author: form_data.author,
         });
       } else {
-        req.flash("success", "Libro agregado correctamente");
+        req.flash("success", "Book successfully added");
         res.redirect("/books");
       }
     });
   }
 });
 
-// Mostrar la pagina de editar
+// display edit book page
 router.get("/edit/(:id)", function (req, res, next) {
   let id = req.params.id;
 
@@ -136,7 +80,7 @@ router.get("/edit/(:id)", function (req, res, next) {
 
       // if user not found
       if (rows.length <= 0) {
-        req.flash("error", "Libro no encontrado id = " + id);
+        req.flash("error", "Book not found with id = " + id);
         res.redirect("/books");
       }
       // if book found
@@ -153,7 +97,7 @@ router.get("/edit/(:id)", function (req, res, next) {
   );
 });
 
-// Actualizar datos de libros
+// update book data
 router.post("/update/:id", function (req, res, next) {
   let id = req.params.id;
   let name = req.body.name;
@@ -175,11 +119,11 @@ router.post("/update/:id", function (req, res, next) {
 
   // if no error
   if (!errors) {
-    const form_data = {
+    var form_data = {
       name: name,
       author: author,
     };
-    // Consulta para actualizar
+    // update query
     dbConn.query(
       "UPDATE books SET ? WHERE id = " + id,
       form_data,
@@ -195,7 +139,7 @@ router.post("/update/:id", function (req, res, next) {
             author: form_data.author,
           });
         } else {
-          req.flash("success", "Libro actualizado correctamente");
+          req.flash("success", "Book successfully updated");
           res.redirect("/books");
         }
       }
@@ -203,7 +147,7 @@ router.post("/update/:id", function (req, res, next) {
   }
 });
 
-// eliminar libro
+// delete book
 router.get("/delete/(:id)", function (req, res, next) {
   let id = req.params.id;
 
@@ -216,8 +160,8 @@ router.get("/delete/(:id)", function (req, res, next) {
       res.redirect("/books");
     } else {
       // set flash message
-      req.flash("success", "Libro eliminado satisfactoriamente! ID = " + id);
-      // redireccionar a la pagina de libros
+      req.flash("success", "Book successfully deleted! ID = " + id);
+      // redirect to books page
       res.redirect("/books");
     }
   });
