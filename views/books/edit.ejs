@@ -1,51 +1,69 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Edit Book</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="UTF-8">
+    <title>Editar Libro</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 
-<body>
-    <div class="min-h-screen flex flex-col bg-gradient-to-b from-white to-emerald-100">
+<body class="bg-emerald-50 flex min-h-screen w-screen">
 
-        <!--! El header  -->
+    <!-- SIDEBAR -->
+
+    <%- include('../plantillas/sidebar') %>
         <%- include('../plantillas/header2') %>
-            <div class=" container" style="margin-top: 50px;">
 
-                <% if (messages.error) { %>
-                    <div class="alert alert-danger" role="alert"><%- messages.error %></div>
+            <div class="container mt-5">
+                <% if (messages && messages.error) { %>
+                    <div class="alert alert-danger"><%- messages.error %></div>
                     <% } %>
-
                         <div class="card">
-                            <div class="card-header">
-                                Editar Libro
-                            </div>
+                            <div class="card-header">Editar Libro</div>
                             <div class="card-body">
-                                <form action="/books/update/<%= id %>" method="post">
+                                <form action="/books/update/<%= id_book %>" method="POST">
                                     <div class="form-group">
                                         <label>Nombre:</label>
-                                        <input type="text" class="form-control" name="name" value="<%= name %>"
-                                            autocomplete="off">
+                                        <input type="text" name="name" class="form-control" value="<%= name %>"
+                                            required>
                                     </div>
                                     <div class="form-group">
-                                        <label>Autor:</label>
-                                        <input type="text" class="form-control" name="author" value="<%= author %>"
-                                            autocomplete="off">
+                                        <label>ISBN:</label>
+                                        <input type="text" name="isbn" class="form-control" value="<%= isbn %>"
+                                            required>
                                     </div>
                                     <div class="form-group">
-                                        <input type="submit" class="btn btn-info" value="Actualizar" />
+                                        <label>Año de publicación:</label>
+                                        <input type="number" name="year_published" class="form-control"
+                                            value="<%= year_published %>" required>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Número de páginas:</label>
+                                        <input type="number" name="num_pages" class="form-control"
+                                            value="<%= num_pages %>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ID Autor:</label>
+                                        <input type="number" name="id_author" class="form-control"
+                                            value="<%= id_author %>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ID Categoría:</label>
+                                        <input type="number" name="id_category" class="form-control"
+                                            value="<%= id_category %>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ID Editorial:</label>
+                                        <input type="number" name="id_publisher" class="form-control"
+                                            value="<%= id_publisher %>" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Actualizar</button>
                                 </form>
                             </div>
                         </div>
             </div>
-    </div>
-    <%- include('../plantillas/footer') %>
 
+            <%- include('../plantillas/footer') %>
 </body>
 
 </html>

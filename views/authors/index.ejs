@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Autores</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+
+<body class="bg-emerald-50 min-h-screen">
+    <%- include('../plantillas/header1') %>
+
+        <div class="container mt-5">
+            <% if (messages.success) { %>
+                <div class="alert alert-success"><%- messages.success %></div>
+                <% } %>
+                    <% if (messages.error) { %>
+                        <div class="alert alert-danger"><%- messages.error %></div>
+                        <% } %>
+
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h4>Listado de Autores</h4>
+                                    <a href="/authors/add" class="btn btn-success">Añadir Autor</a>
+                                </div>
+                                <div class="card-body">
+                                    <form action="/authors" method="GET" class="form-inline mb-3">
+                                        <input type="text" name="search" value="<%= searchTerm %>"
+                                            placeholder="Buscar autor..." class="form-control mr-2">
+                                        <button type="submit" class="btn btn-primary">Buscar</button>
+                                        <% if (searchTerm) { %>
+                                            <a href="/authors" class="btn btn-secondary ml-2">Limpiar</a>
+                                            <% } %>
+                                    </form>
+
+                                    <% if(data.length) { %>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Nombre</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% for(let i=0; i < data.length; i++) { %>
+                                                    <tr>
+                                                        <td>
+                                                            <%= ((currentPage-1)*5)+(i+1) %>
+                                                        </td>
+                                                        <td>
+                                                            <%= data[i].name %>
+                                                        </td>
+                                                        <td>
+                                                            <a href="/authors/edit/<%= data[i].id_author %>"
+                                                                class="btn btn-sm btn-warning">Editar</a>
+                                                            <a href="/authors/delete/<%= data[i].id_author %>"
+                                                                class="btn btn-sm btn-danger"
+                                                                onclick="return confirm('¿Eliminar este autor?')">Eliminar</a>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                            </tbody>
+                                        </table>
+
+                                        <!-- paginación -->
+                                        <% if(totalPages> 1) { %>
+                                            <nav>
+                                                <ul class="pagination">
+                                                    <% for(let i=1; i <=totalPages; i++) { %>
+                                                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                            <a class="page-link"
+                                                                href="/authors?page=<%= i %><%= searchTerm ? '&search=' + searchTerm : '' %>">
+                                                                <%= i %>
+                                                            </a>
+                                                        </li>
+                                                        <% } %>
+                                                </ul>
+                                            </nav>
+                                            <% } %>
+                                                <% } else { %>
+                                                    <p>No se encontraron autores.</p>
+                                                    <% } %>
+                                </div>
+                            </div>
+        </div>
+
+        <%- include('../plantillas/footer') %>
+</body>
+
+</html>
