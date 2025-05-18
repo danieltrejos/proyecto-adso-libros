@@ -9,8 +9,8 @@ router.get("/", (req, res) => {
   const offset = (page - 1) * limit;
   const search = req.query.search || "";
 
-  let query = `SELECT * FROM authors WHERE name LIKE ? LIMIT ? OFFSET ?`;
-  let countQuery = `SELECT COUNT(*) AS total FROM authors WHERE name LIKE ?`;
+  let query = `SELECT * FROM authors WHERE name LIKE ? AND state = 1 LIMIT ? OFFSET ?`;
+  let countQuery = `SELECT COUNT(*) AS total FROM authors WHERE name LIKE ? AND state = 1`;
   const searchPattern = `%${search}%`;
 
   db.query(countQuery, [searchPattern], (err, countResult) => {
@@ -75,7 +75,7 @@ router.post("/add", (req, res) => {
 // Editar
 router.get("/edit/:id", (req, res) => {
   db.query(
-    "SELECT * FROM authors WHERE id_author = ?",
+    "SELECT * FROM authors WHERE id_author = ? AND state = 1",
     [req.params.id],
     (err, rows) => {
       if (err || rows.length === 0) {
@@ -120,10 +120,10 @@ router.post("/update/:id", (req, res) => {
   );
 });
 
-// Eliminar
+// Eliminar (soft delete)
 router.get("/delete/:id", (req, res) => {
   db.query(
-    "DELETE FROM authors WHERE id_author = ?",
+    "UPDATE authors SET state = 0 WHERE id_author = ?",
     [req.params.id],
     (err) => {
       if (err) req.flash("error", err.message);
