@@ -40,8 +40,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Email:</label>
-                                                <input type="email" name="email" class="form-control" value="<%= email %>"
-                                                    required>
+                                                <input type="email" name="email" class="form-control"
+                                                    value="<%= email %>" required>
                                             </div>
                                             <div class="form-group">
                                                 <label>Contraseña:</label>
@@ -51,9 +51,9 @@
                                             <div class="form-group">
                                                 <label>Rol:</label>
                                                 <select name="role" class="form-control" required>
-                                                    <option value="ADMIN" <%= role === 'ADMIN' ? 'selected' : '' %>>
+                                                    <option value="ADMIN" <%=role==='ADMIN' ? 'selected' : '' %>>
                                                         Administrador</option>
-                                                    <option value="CLIENT" <%= role === 'CLIENT' ? 'selected' : '' %>>
+                                                    <option value="CLIENT" <%=role==='CLIENT' ? 'selected' : '' %>>
                                                         Cliente</option>
                                                 </select>
                                             </div>
