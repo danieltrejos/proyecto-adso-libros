@@ -25,72 +25,68 @@
                     <div class="container">
                         <% if (messages && messages.error) { %>
                             <div class="alert alert-danger"><%- messages.error %></div>
-                            <% } %>
+                        <% } %>
 
-                                <div class="card shadow-sm">
-                                    <div class="card-header">
-                                        <h4 class="mb-0">✏️ Editar Préstamo</h4>
+                        <div class="card shadow-sm">
+                            <div class="card-header">
+                                <h4 class="mb-0">✏️ Editar Préstamo</h4>
+                            </div>
+                            <div class="card-body">
+                                <form action="/loans/update/<%= loan.id_loan %>" method="POST">
+                                    <!-- Información del Usuario -->
+                                    <div class="form-group">
+                                        <label>Usuario:</label>
+                                        <input type="text" class="form-control" value="<%= loan.user_name %>" disabled>
                                     </div>
-                                    <div class="card-body">
-                                        <form action="/loans/update/<%= id_loan %>" method="POST">
-                                            <div class="form-group">
-                                                <label>Usuario:</label>
-                                                <select name="id_user" class="form-control" required
-                                                    <%=status==='RETURNED' ? 'disabled' : '' %>>
-                                                    <option value="">Seleccione un usuario</option>
-                                                    <% users.forEach(function(user) { %>
-                                                        <option value="<%= user.id_user %>" <%=id_user==user.id_user
-                                                            ? 'selected' : '' %>>
-                                                            <%= user.name %>
-                                                        </option>
-                                                        <% }); %>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Libro:</label>
-                                                <select name="id_book" class="form-control" required
-                                                    <%=status==='RETURNED' ? 'disabled' : '' %>>
-                                                    <option value="">Seleccione un libro</option>
-                                                    <% books.forEach(function(book) { %>
-                                                        <option value="<%= book.id_book %>" <%=id_book==book.id_book
-                                                            ? 'selected' : '' %>>
-                                                            <%= book.name %>
-                                                        </option>
-                                                        <% }); %>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Fecha de Préstamo:</label>
-                                                <input type="date" name="loan_date" class="form-control"
-                                                    value="<%= loan_date.toISOString().split('T')[0] %>" required
-                                                    <%=status==='RETURNED' ? 'disabled' : '' %>>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Estado:</label>
-                                                <select name="status" class="form-control" required>
-                                                    <option value="ACTIVE" <%=status==='ACTIVE' ? 'selected' : '' %>
-                                                        >Prestado</option>
-                                                    <option value="RETURNED" <%=status==='RETURNED' ? 'selected' : '' %>
-                                                        >Devuelto</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Fecha de Devolución:</label>
-                                                <input type="date" name="return_date" class="form-control"
-                                                    value="<%= return_date ? return_date.toISOString().split('T')[0] : '' %>"
-                                                    <%=status !=='RETURNED' ? 'disabled' : '' %>>
-                                            </div>
-                                            <div class="mt-4">
-                                                <button type="submit" class="btn btn-primary">
-                                                    <i class="fas fa-save"></i> Actualizar
-                                                </button>
-                                                <a href="/loans" class="btn btn-secondary">
-                                                    <i class="fas fa-arrow-left"></i> Cancelar
-                                                </a>
-                                            </div>
-                                        </form>
+
+                                    <!-- Información del Libro -->
+                                    <div class="form-group">
+                                        <label>Libro:</label>
+                                        <input type="text" class="form-control" value="<%= loan.book_name %>" disabled>
                                     </div>
-                                </div>
+
+                                    <!-- Fecha de Préstamo -->
+                                    <div class="form-group">
+                                        <label>Fecha de Préstamo:</label>
+                                        <input type="date" class="form-control" 
+                                            value="<%= loan.loan_date.toISOString().split('T')[0] %>" disabled>
+                                    </div>
+
+                                    <!-- Fecha de Devolución -->
+                                    <div class="form-group">
+                                        <label>Fecha de Devolución:</label>
+                                        <input type="date" name="return_due" class="form-control" required
+                                            value="<%= new Date(loan.return_due).toISOString().split('T')[0] %>"
+                                            min="<%= new Date().toISOString().split('T')[0] %>"
+                                            <%= loan.returned ? 'disabled' : '' %>>
+                                        <% if (!loan.returned) { %>
+                                            <small class="text-muted">Puede actualizar la fecha de devolución si es necesario</small>
+                                        <% } %>
+                                    </div>
+
+                                    <!-- Estado del Préstamo -->
+                                    <div class="form-group">
+                                        <label>Estado:</label>
+                                        <div>
+                                            <span class="badge badge-<%= loan.returned ? 'success' : 'warning' %> p-2">
+                                                <%= loan.returned ? 'Devuelto' : 'Prestado' %>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <% if (!loan.returned) { %>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-save"></i> Actualizar
+                                            </button>
+                                        <% } %>
+                                        <a href="/loans" class="btn btn-secondary">
+                                            <i class="fas fa-arrow-left"></i> Volver
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </main>
 

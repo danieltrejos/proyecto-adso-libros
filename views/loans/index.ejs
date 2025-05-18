@@ -19,7 +19,7 @@
 
             <!-- HEADER -->
 
-            <%- include('../plantillas/header2.ejs') %>
+            <%- include('../plantillas/header1') %>
 
                 <!-- MAIN -->
                 <main class="flex-1 p-4">
@@ -33,8 +33,10 @@
 
                                         <div class="card">
                                             <div class="card-header d-flex justify-content-between align-items-center">
-                                                <h5 class="mb-0">📖 Listado de Préstamos</h5>
-                                                <a href="/loans/add" class="btn btn-success">Añadir Préstamo</a>
+                                                <h5 class="mb-0">📚 Listado de Préstamos</h5>
+                                                <a href="/loans/add" class="btn btn-success">
+                                                    <i class="fas fa-plus"></i> Nuevo Préstamo
+                                                </a>
                                             </div>
 
                                             <div class="card-body">
@@ -42,11 +44,13 @@
                                                     <input type="text" name="search" value="<%= searchTerm %>"
                                                         placeholder="Buscar por usuario o libro..."
                                                         class="form-control mr-2">
-                                                    <button type="submit"
-                                                        class="btn btn-outline-success">Buscar</button>
+                                                    <button type="submit" class="btn btn-outline-success">
+                                                        <i class="fas fa-search"></i> Buscar
+                                                    </button>
                                                     <% if (searchTerm) { %>
-                                                        <a href="/loans"
-                                                            class="btn btn-outline-secondary ml-2">Limpiar</a>
+                                                        <a href="/loans" class="btn btn-outline-secondary ml-2">
+                                                            <i class="fas fa-times"></i> Limpiar
+                                                        </a>
                                                         <% } %>
                                                 </form>
 
@@ -82,15 +86,15 @@
                                                                                 %>
                                                                         </td>
                                                                         <td>
-                                                                            <%= loan.return_date ? new
-                                                                                Date(loan.return_date).toLocaleDateString()
-                                                                                : 'Pendiente' %>
+                                                                            <%= new
+                                                                                Date(loan.return_due).toLocaleDateString()
+                                                                                %>
                                                                         </td>
                                                                         <td>
                                                                             <span
-                                                                                class="badge badge-<%= loan.status === 'RETURNED' ? 'success' : 'warning' %>">
-                                                                                <%= loan.status==='RETURNED'
-                                                                                    ? 'Devuelto' : 'Prestado' %>
+                                                                                class="badge badge-<%= loan.returned ? 'success' : 'warning' %>">
+                                                                                <%= loan.returned ? 'Devuelto'
+                                                                                    : 'Prestado' %>
                                                                             </span>
                                                                         </td>
                                                                         <td class="text-center">
@@ -99,17 +103,17 @@
                                                                                 <i class="fas fa-edit"></i> Editar
                                                                             </a>
                                                                             <% if (!loan.returned) { %>
-                                                                                <a href="/loans/continue/<%= loan.id_loan %>"
-                                                                                    class="btn btn-sm btn-info"
-                                                                                    onclick="return confirm('¿Desea continuar este préstamo por otro período?')">
-                                                                                    <i class="fas fa-sync"></i>
-                                                                                    Continuar
-                                                                                </a>
-                                                                                <a href="/loans/return/<%= loan.id_loan %>"
-                                                                                    class="btn btn-sm btn-success"
-                                                                                    onclick="return confirm('¿Confirmar la devolución de este libro?')">
-                                                                                    <i class="fas fa-undo"></i> Devolver
-                                                                                </a>
+                                                                                <form
+                                                                                    action="/loans/return/<%= loan.id_loan %>"
+                                                                                    method="POST"
+                                                                                    style="display: inline-block;">
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-sm btn-success"
+                                                                                        onclick="return confirm('¿Confirmar la devolución de este libro?')">
+                                                                                        <i class="fas fa-undo"></i>
+                                                                                        Devolver
+                                                                                    </button>
+                                                                                </form>
                                                                                 <% } %>
                                                                         </td>
                                                                     </tr>
@@ -150,16 +154,18 @@
                                                             <% } else { %>
                                                                 <div class="text-center text-muted py-5">
                                                                     <% if (searchTerm) { %>
-                                                                        <p>No se encontraron préstamos con "<%=
-                                                                                searchTerm %>"</p>
+                                                                        <p>No se encontraron préstamos que coincidan con
+                                                                            "<%= searchTerm %>"</p>
                                                                         <a href="/loans"
                                                                             class="btn btn-outline-secondary">Ver
                                                                             todos</a>
                                                                         <% } else { %>
-                                                                            <p>No hay préstamos registrados.</p>
+                                                                            <p>No hay préstamos registrados</p>
                                                                             <a href="/loans/add"
-                                                                                class="btn btn-success">Registrar el
-                                                                                primero</a>
+                                                                                class="btn btn-success">
+                                                                                <i class="fas fa-plus"></i> Registrar el
+                                                                                primer préstamo
+                                                                            </a>
                                                                             <% } %>
                                                                 </div>
                                                                 <% } %>
@@ -169,7 +175,7 @@
                 </main>
 
                 <!-- FOOTER -->
-                <%- include('../plantillas/footer.ejs') %>
+                <%- include('../plantillas/footer') %>
 
         </div>
 
