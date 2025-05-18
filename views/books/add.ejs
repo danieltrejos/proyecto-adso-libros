@@ -62,21 +62,40 @@
                                                     value="<%= num_pages %>" required>
                                             </div>
                                             <div class="form-group">
-                                                <label>ID Autor:</label>
-                                                <input type="number" name="id_author" class="form-control"
-                                                    value="<%= id_author %>" required>
+                                                <label>Autor:</label>
+                                                <select name="id_author" class="form-control" required>
+                                                    <option value="">Seleccione un autor</option>
+                                                    <% authors.forEach(function(author) { %>
+                                                        <option value="<%= author.id_author %>" <%= locals.id_author && id_author == author.id_author ? 'selected' : '' %>>
+                                                            <%= author.name %>
+                                                        </option>
+                                                    <% }); %>
+                                                </select>
                                             </div>
                                             <div class="form-group">
-                                                <label>ID Categoría:</label>
-                                                <input type="number" name="id_category" class="form-control"
-                                                    value="<%= id_category %>" required>
+                                                <label>Categoría:</label>
+                                                <select name="id_category" class="form-control" required>
+                                                    <option value="">Seleccione una categoría</option>
+                                                    <% categories.forEach(function(category) { %>
+                                                        <option value="<%= category.id_category %>" <%= locals.id_category && id_category == category.id_category ? 'selected' : '' %>>
+                                                            <%= category.name %>
+                                                        </option>
+                                                    <% }); %>
+                                                </select>
                                             </div>
                                             <div class="form-group">
-                                                <label>ID Editorial:</label>
-                                                <input type="number" name="id_publisher" class="form-control"
-                                                    value="<%= id_publisher %>" required>
+                                                <label>Editorial:</label>
+                                                <select name="id_publisher" class="form-control" required>
+                                                    <option value="">Seleccione una editorial</option>
+                                                    <% publishers.forEach(function(publisher) { %>
+                                                        <option value="<%= publisher.id_publisher %>" <%= locals.id_publisher && id_publisher == publisher.id_publisher ? 'selected' : '' %>>
+                                                            <%= publisher.name %>
+                                                        </option>
+                                                    <% }); %>
+                                                </select>
                                             </div>
                                             <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                                            <a href="/books" class="btn btn-secondary mt-3">Cancelar</a>
                                         </form>
                                     </div>
                                 </div>

@@ -13,10 +13,11 @@
             height: 100%;
             margin: 0;
         }
+        .table-responsive {
+            overflow-x: auto;
+        }
     </style>
 </head>
-
-
 
 <body class="bg-emerald-50 flex min-h-screen w-screen h-full">
 
@@ -60,38 +61,64 @@
                                                 </form>
 
                                                 <% if (data.length> 0) { %>
-                                                    <table class="table table-striped">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Nombre</th>
-                                                                <th>Autor</th>
-                                                                <th class="text-center">Acciones</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <% data.forEach((book, i)=> { %>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped">
+                                                            <thead>
                                                                 <tr>
-                                                                    <td>
-                                                                        <%= ((currentPage - 1) * 5) + (i + 1) %>
-                                                                    </td>
-                                                                    <td>
-                                                                        <%= book.name %>
-                                                                    </td>
-                                                                    <td>
-                                                                        <%= book.author %>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        <a href="/books/edit/<%= book.id_book %>"
-                                                                            class="btn btn-sm btn-warning">Editar</a>
-                                                                        <a href="/books/delete/<%= book.id_book %>"
-                                                                            onclick="return confirm('¿Eliminar este libro?')"
-                                                                            class="btn btn-sm btn-danger">Eliminar</a>
-                                                                    </td>
+                                                                    <th>#</th>
+                                                                    <th>Nombre</th>
+                                                                    <th>Autor</th>
+                                                                    <th>ISBN</th>
+                                                                    <th>Año</th>
+                                                                    <th>Páginas</th>
+                                                                    <th>Categoría</th>
+                                                                    <th>Editorial</th>
+                                                                    <th class="text-center">Acciones</th>
                                                                 </tr>
-                                                                <% }) %>
-                                                        </tbody>
-                                                    </table>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% data.forEach((book, i)=> { %>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <%= ((currentPage - 1) * 5) + (i + 1) %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.name %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.author_name %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.isbn %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.year_published %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.num_pages %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.category_name %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.publisher_name %>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <a href="/books/edit/<%= book.id_book %>"
+                                                                                class="btn btn-sm btn-warning">
+                                                                                <i class="fas fa-edit"></i> Editar
+                                                                            </a>
+                                                                            <a href="/books/delete/<%= book.id_book %>"
+                                                                                onclick="return confirm('¿Está seguro que desea eliminar este libro?')"
+                                                                                class="btn btn-sm btn-danger">
+                                                                                <i class="fas fa-trash"></i> Eliminar
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% }) %>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
 
                                                     <% if (totalPages> 1) { %>
                                                         <nav class="mt-3">
@@ -144,6 +171,9 @@
                 <%- include('../plantillas/footer') %>
 
         </div>
+
+        <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
