@@ -83,7 +83,7 @@ router.get("/edit/:id", (req, res) => {
                 return res.redirect("/categories");
             }
             res.render("categories/edit", {
-                id: rows[0].id_category,
+                id_category: rows[0].id_category,
                 name: rows[0].name,
                 messages: {},
             });
@@ -96,7 +96,7 @@ router.post("/update/:id", (req, res) => {
     const name = req.body.name;
     if (!name) {
         return res.render("categories/edit", {
-            id: req.params.id,
+            id_category: req.params.id,
             name,
             messages: { error: "El nombre es obligatorio" },
         });
@@ -108,7 +108,7 @@ router.post("/update/:id", (req, res) => {
         (err) => {
             if (err) {
                 res.render("categories/edit", {
-                    id: req.params.id,
+                    id_category: req.params.id,
                     name,
                     messages: { error: err.message },
                 });

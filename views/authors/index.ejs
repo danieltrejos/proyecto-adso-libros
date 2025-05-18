@@ -40,7 +40,8 @@
                                                 <form action="/authors" method="GET" class="form-inline mb-3">
                                                     <input type="text" name="search" value="<%= searchTerm %>"
                                                         placeholder="Buscar autor..." class="form-control mr-2">
-                                                    <button type="submit" class="btn btn-outline-success">Buscar</button>
+                                                    <button type="submit"
+                                                        class="btn btn-outline-success">Buscar</button>
                                                     <% if (searchTerm) { %>
                                                         <a href="/authors"
                                                             class="btn btn-outline-secondary ml-2">Limpiar</a>
@@ -100,7 +101,8 @@
                                                             <% } else { %>
                                                                 <div class="text-center text-muted py-5">
                                                                     <% if (searchTerm) { %>
-                                                                        <p>No se encontraron autores con "<%= searchTerm %>"
+                                                                        <p>No se encontraron autores con "<%= searchTerm
+                                                                                %>"
                                                                         </p>
                                                                         <a href="/authors"
                                                                             class="btn btn-outline-secondary">Ver

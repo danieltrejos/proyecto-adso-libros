@@ -104,7 +104,7 @@ router.get("/edit/:id", (req, res) => {
         return res.redirect("/users");
       }
       res.render("users/edit", {
-        id: rows[0].id_user,
+        id_user: rows[0].id_user,
         name: rows[0].name,
         email: rows[0].email,
         role: rows[0].role,
@@ -119,7 +119,7 @@ router.post("/update/:id", (req, res) => {
   const { name, email, password, role } = req.body;
   if (!name || !email || !role) {
     return res.render("users/edit", {
-      id: req.params.id,
+      id_user: req.params.id,
       name,
       email,
       role,
@@ -144,7 +144,7 @@ router.post("/update/:id", (req, res) => {
     (err) => {
       if (err) {
         res.render("users/edit", {
-          id: req.params.id,
+          id_user: req.params.id,
           ...userData,
           messages: { error: err.message },
         });
