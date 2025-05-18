@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>Añadir Préstamo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 
 <body class="bg-emerald-50 flex min-h-screen w-screen">
@@ -18,70 +18,88 @@
         <div class="flex flex-col flex-1 w-full min-h-screen">
 
             <!-- HEADER -->
-            <%- include('../plantillas/header1') %>
+            <%- include('../plantillas/header1.ejs') %>
+                <%- include('../plantillas/header2.ejs') %>
 
-                <!-- MAIN -->
-                <main class="flex-1 p-4">
-                    <div class="container">
-                        <% if (messages && messages.error) { %>
-                            <div class="alert alert-danger"><%- messages.error %></div>
-                            <% } %>
+                    <!-- MAIN -->
+                    <main class="flex-1 p-4">
+                        <div class="container mx-auto px-4 py-8">
+                            <div class="max-w-2xl mx-auto">
+                                <h1 class="text-2xl font-bold mb-6">Nuevo Préstamo</h1>
 
-                                <div class="card shadow-sm">
-                                    <div class="card-header">
-                                        <h4 class="mb-0">📖 Añadir Préstamo</h4>
+                                <!-- Mensajes flash -->
+                                <% if (messages.error) { %>
+                                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+                                        role="alert">
+                                        <span class="block sm:inline">
+                                            <%= messages.error %>
+                                        </span>
                                     </div>
-                                    <div class="card-body">
-                                        <form action="/loans/add" method="POST">
-                                            <div class="form-group">
-                                                <label>Usuario:</label>
-                                                <select name="id_user" class="form-control" required>
+                                    <% } %>
+
+                                        <form action="/loans/add" method="POST" class="space-y-6">
+                                            <!-- Usuario -->
+                                            <div>
+                                                <label for="id_user"
+                                                    class="block text-sm font-medium text-gray-700">Usuario</label>
+                                                <select name="id_user" id="id_user" required
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                                     <option value="">Seleccione un usuario</option>
                                                     <% users.forEach(function(user) { %>
-                                                        <option value="<%= user.id_user %>" <%= locals.id_user && id_user == user.id_user ? 'selected' : '' %>>
+                                                        <option value="<%= user.id_user %>">
                                                             <%= user.name %> (<%= user.email %>)
                                                         </option>
-                                                    <% }); %>
+                                                        <% }) %>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label>Libro:</label>
-                                                <select name="id_book" class="form-control" required>
+                                            <!-- Libro -->
+                                            <div>
+                                                <label for="id_book"
+                                                    class="block text-sm font-medium text-gray-700">Libro</label>
+                                                <select name="id_book" id="id_book" required
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                                     <option value="">Seleccione un libro</option>
                                                     <% books.forEach(function(book) { %>
-                                                        <option value="<%= book.id_book %>" <%= locals.id_book && id_book == book.id_book ? 'selected' : '' %>>
-                                                            <%= book.name %> - <%= book.author_name %>
+                                                        <option value="<%= book.id_book %>">
+                                                            <%= book.name %> - <%= book.author_name %> (<%=
+                                                                        book.publisher_name %>)
                                                         </option>
-                                                    <% }); %>
+                                                        <% }) %>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label>Fecha de devolución:</label>
-                                                <input type="date" name="return_due" class="form-control" required 
+                                            <!-- Fecha de devolución -->
+                                            <div>
+                                                <label for="return_due"
+                                                    class="block text-sm font-medium text-gray-700">Fecha de
+                                                    devolución</label>
+                                                <input type="date" name="return_due" id="return_due" required
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                                     min="<%= new Date().toISOString().split('T')[0] %>"
-                                                    max="<%= new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0] %>"
-                                                    value="<%= locals.return_due || '' %>">
-                                                <small class="text-muted">El período máximo de préstamo es de 30 días</small>
+                                                    max="<%= new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0] %>">
+                                                <small class="text-gray-500">El período máximo de préstamo es de 30
+                                                    días</small>
                                             </div>
 
-                                            <div class="mt-4">
-                                                <button type="submit" class="btn btn-success">
-                                                    <i class="fas fa-save"></i> Guardar
+                                            <!-- Botones -->
+                                            <div class="flex gap-4">
+                                                <button type="submit"
+                                                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                                                    Guardar
                                                 </button>
-                                                <a href="/loans" class="btn btn-secondary">
-                                                    <i class="fas fa-arrow-left"></i> Cancelar
+                                                <a href="/loans"
+                                                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+                                                    Cancelar
                                                 </a>
                                             </div>
                                         </form>
-                                    </div>
-                                </div>
-                    </div>
-                </main>
+                            </div>
+                        </div>
+                    </main>
 
-                <!-- FOOTER -->
-                <%- include('../plantillas/footer') %>
+                    <!-- FOOTER -->
+                    <%- include('../plantillas/footer.ejs') %>
         </div>
 
         <!-- Font Awesome -->
