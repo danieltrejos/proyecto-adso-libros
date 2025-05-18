@@ -5,112 +5,107 @@
     <meta charset="UTF-8">
     <title>Añadir Libro</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 
-<body class="flex min-h-screen w-screen bg-emerald-50">
+<body class="bg-emerald-50 flex min-h-screen w-screen">
 
     <!-- SIDEBAR -->
     <%- include('../plantillas/sidebar') %>
 
-        <!-- CONTENIDO PRINCIPAL -->
-        <div class="flex flex-col flex-1 w-full min-h-screen">
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="flex flex-col flex-1 w-full min-h-screen">
 
-            <!-- HEADER -->
-            <%- include('../plantillas/header2') %>
+        <!-- HEADER -->
+        <%- include('../plantillas/header1') %>
 
-                <!-- MAIN -->
-                <main class="flex-1 p-4">
-                    <div class="container mt-4">
+        <!-- MAIN -->
+        <main class="flex-1 p-4">
+            <div class="container">
+                <% if (messages && messages.error) { %>
+                    <div class="alert alert-danger"><%- messages.error %></div>
+                <% } %>
 
-                        <% if (messages && messages.error) { %>
-                            <div class="alert alert-danger"><%- messages.error %></div>
-                            <% } %>
-
-                                <div class="card shadow-sm">
-                                    <div class="card-header font-weight-bold">
-                                        Añadir Libro
-                                    </div>
-                                    <div class="card-body">
-                                        <form action="/books/add" method="POST">
-                                            <div class="form-group">
-                                                <label>Nombre:</label>
-                                                <input type="text" name="name" class="form-control" value="<%= name %>"
-                                                    required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>ISBN:</label>
-                                                <input type="text" name="isbn" class="form-control" value="<%= isbn %>"
-                                                    required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Año de publicación:</label>
-                                                <input type="number" name="year_published" class="form-control"
-                                                    value="<%= year_published %>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Número de páginas:</label>
-                                                <input type="number" name="num_pages" class="form-control"
-                                                    value="<%= num_pages %>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Autor:</label>
-                                                <select name="id_author" class="form-control" required>
-                                                    <option value="">Seleccione un autor</option>
-                                                    <% authors.forEach(function(author) { %>
-                                                        <option value="<%= author.id_author %>" <%=locals.id_author &&
-                                                            id_author==author.id_author ? 'selected' : '' %>>
-                                                            <%= author.name %>
-                                                        </option>
-                                                        <% }); %>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Categoría:</label>
-                                                <select name="id_category" class="form-control" required>
-                                                    <option value="">Seleccione una categoría</option>
-                                                    <% categories.forEach(function(category) { %>
-                                                        <option value="<%= category.id_category %>"
-                                                            <%=locals.id_category && id_category==category.id_category
-                                                            ? 'selected' : '' %>>
-                                                            <%= category.name %>
-                                                        </option>
-                                                        <% }); %>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Editorial:</label>
-                                                <select name="id_publisher" class="form-control" required>
-                                                    <option value="">Seleccione una editorial</option>
-                                                    <% publishers.forEach(function(publisher) { %>
-                                                        <option value="<%= publisher.id_publisher %>"
-                                                            <%=locals.id_publisher &&
-                                                            id_publisher==publisher.id_publisher ? 'selected' : '' %>>
-                                                            <%= publisher.name %>
-                                                        </option>
-                                                        <% }); %>
-                                                </select>
-                                            </div>
-                                            <button type="submit" class="btn btn-success mt-3">Guardar</button>
-                                            <a href="/books" class="btn btn-secondary mt-3">Cancelar</a>
-                                        </form>
-                                    </div>
-                                </div>
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h4 class="mb-0">📚 Añadir Libro</h4>
                     </div>
-                </main>
+                    <div class="card-body">
+                        <form action="/books/add" method="POST">
+                            <div class="form-group mb-3">
+                                <label>Nombre:</label>
+                                <input type="text" name="name" class="form-control" value="<%= name %>" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>ISBN:</label>
+                                <input type="text" name="isbn" class="form-control" value="<%= isbn %>" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Año de publicación:</label>
+                                <input type="number" name="year_published" class="form-control" value="<%= year_published %>" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Número de páginas:</label>
+                                <input type="number" name="num_pages" class="form-control" value="<%= num_pages %>" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Autor:</label>
+                                <select name="id_author" class="form-control" required>
+                                    <option value="">Seleccione un autor</option>
+                                    <% authors.forEach(function(author) { %>
+                                        <option value="<%= author.id_author %>" 
+                                            <%= locals.id_author && id_author == author.id_author ? 'selected' : '' %>>
+                                            <%= author.name %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Categoría:</label>
+                                <select name="id_category" class="form-control" required>
+                                    <option value="">Seleccione una categoría</option>
+                                    <% categories.forEach(function(category) { %>
+                                        <option value="<%= category.id_category %>"
+                                            <%= locals.id_category && id_category == category.id_category ? 'selected' : '' %>>
+                                            <%= category.name %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Editorial:</label>
+                                <select name="id_publisher" class="form-control" required>
+                                    <option value="">Seleccione una editorial</option>
+                                    <% publishers.forEach(function(publisher) { %>
+                                        <option value="<%= publisher.id_publisher %>"
+                                            <%= locals.id_publisher && id_publisher == publisher.id_publisher ? 'selected' : '' %>>
+                                            <%= publisher.name %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-save"></i> Guardar
+                                </button>
+                                <a href="/books" class="btn btn-secondary ms-2">
+                                    <i class="fas fa-arrow-left"></i> Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
 
-                <!-- FOOTER -->
-                <%- include('../plantillas/footer') %>
+        <!-- FOOTER -->
+        <%- include('../plantillas/footer') %>
 
-        </div>
+    </div>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

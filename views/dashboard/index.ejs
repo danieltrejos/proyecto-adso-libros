@@ -13,111 +13,140 @@
     <!-- SIDEBAR -->
     <%- include('../plantillas/sidebar') %>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <div class="flex flex-col flex-1 w-full min-h-screen">
-        <!-- HEADER -->
-        <%- include('../plantillas/header1') %>
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="flex flex-col flex-1 w-full min-h-screen">
+            <!-- HEADER -->
+            <%- include('../plantillas/header1') %>
 
-        <!-- MAIN -->
-        <main class="flex-1 p-4">
-            <div class="container">
-                <h1 class="text-2xl font-bold mb-6">Panel de Control</h1>
-                <p class="text-gray-600 mb-8">Bienvenido al panel de administración de BiblioApp</p>
+                <!-- MAIN -->
+                <main class="flex-1 p-4">
+                    <div class="container">
+                        <h1 class="text-2xl font-bold mb-6">Panel de Control</h1>
+                        <p class="text-gray-600 mb-8">Bienvenido al panel de administración de BiblioApp</p>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Libros -->
-                    <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-emerald-100 rounded-full p-3 mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                </svg>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Libros -->
+                            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-emerald-100 rounded-full p-3 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-semibold">Gestión de Libros</h3>
+                                </div>
+                                <p class="text-gray-600 mb-4">Administra el catálogo de libros, añade nuevos títulos y
+                                    actualiza la información existente.</p>
+                                <a href="/books"
+                                    class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir
+                                    a Libros</a>
                             </div>
-                            <h3 class="text-lg font-semibold">Gestión de Libros</h3>
-                        </div>
-                        <p class="text-gray-600 mb-4">Administra el catálogo de libros, añade nuevos títulos y actualiza la información existente.</p>
-                        <a href="/books" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir a Libros</a>
-                    </div>
 
-                    <!-- Autores -->
-                    <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-emerald-100 rounded-full p-3 mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
+                            <!-- Autores -->
+                            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-emerald-100 rounded-full p-3 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-semibold">Gestión de Autores</h3>
+                                </div>
+                                <p class="text-gray-600 mb-4">Administra la información de los autores y sus obras en el
+                                    sistema.</p>
+                                <a href="/authors"
+                                    class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir
+                                    a Autores</a>
                             </div>
-                            <h3 class="text-lg font-semibold">Gestión de Autores</h3>
-                        </div>
-                        <p class="text-gray-600 mb-4">Administra la información de los autores y sus obras en el sistema.</p>
-                        <a href="/authors" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir a Autores</a>
-                    </div>
 
-                    <!-- Categorías -->
-                    <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-emerald-100 rounded-full p-3 mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                                </svg>
+                            <!-- Categorías -->
+                            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-emerald-100 rounded-full p-3 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-semibold">Gestión de Categorías</h3>
+                                </div>
+                                <p class="text-gray-600 mb-4">Organiza los libros por géneros y categorías para una
+                                    mejor clasificación.</p>
+                                <a href="/categories"
+                                    class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir
+                                    a Categorías</a>
                             </div>
-                            <h3 class="text-lg font-semibold">Gestión de Categorías</h3>
-                        </div>
-                        <p class="text-gray-600 mb-4">Organiza los libros por géneros y categorías para una mejor clasificación.</p>
-                        <a href="/categories" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir a Categorías</a>
-                    </div>
 
-                    <!-- Editoriales -->
-                    <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-emerald-100 rounded-full p-3 mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                </svg>
+                            <!-- Editoriales -->
+                            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-emerald-100 rounded-full p-3 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-semibold">Gestión de Editoriales</h3>
+                                </div>
+                                <p class="text-gray-600 mb-4">Administra la información de las editoriales y sus
+                                    publicaciones.</p>
+                                <a href="/publishers"
+                                    class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir
+                                    a Editoriales</a>
                             </div>
-                            <h3 class="text-lg font-semibold">Gestión de Editoriales</h3>
-                        </div>
-                        <p class="text-gray-600 mb-4">Administra la información de las editoriales y sus publicaciones.</p>
-                        <a href="/publishers" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir a Editoriales</a>
-                    </div>
 
-                    <!-- Préstamos -->
-                    <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-emerald-100 rounded-full p-3 mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                            <!-- Préstamos -->
+                            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-emerald-100 rounded-full p-3 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-semibold">Gestión de Préstamos</h3>
+                                </div>
+                                <p class="text-gray-600 mb-4">Controla los préstamos activos y el historial de
+                                    devoluciones.</p>
+                                <a href="/loans"
+                                    class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir
+                                    a Préstamos</a>
                             </div>
-                            <h3 class="text-lg font-semibold">Gestión de Préstamos</h3>
-                        </div>
-                        <p class="text-gray-600 mb-4">Controla los préstamos activos y el historial de devoluciones.</p>
-                        <a href="/loans" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir a Préstamos</a>
-                    </div>
 
-                    <!-- Usuarios -->
-                    <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-emerald-100 rounded-full p-3 mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                </svg>
+                            <!-- Usuarios -->
+                            <div class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                                <div class="flex items-center mb-4">
+                                    <div class="bg-emerald-100 rounded-full p-3 mr-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-600"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-semibold">Gestión de Usuarios</h3>
+                                </div>
+                                <p class="text-gray-600 mb-4">Administra los usuarios del sistema y sus permisos.</p>
+                                <a href="/users"
+                                    class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir
+                                    a Usuarios</a>
                             </div>
-                            <h3 class="text-lg font-semibold">Gestión de Usuarios</h3>
                         </div>
-                        <p class="text-gray-600 mb-4">Administra los usuarios del sistema y sus permisos.</p>
-                        <a href="/users" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700 transition-colors">Ir a Usuarios</a>
                     </div>
-                </div>
-            </div>
-        </main>
+                </main>
 
-        <!-- FOOTER -->
-        <%- include('../plantillas/footer') %>
-    </div>
+                <!-- FOOTER -->
+                <%- include('../plantillas/footer') %>
+        </div>
 
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+        <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
