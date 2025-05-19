@@ -177,6 +177,15 @@ router.get("/edit/:id", (req, res) => {
         JOIN books b ON l.id_book = b.id_book
         WHERE l.id_loan = ? AND l.state = 1`;
 
+    // Cargar usuarios y libros para los selectores
+    const usersQuery = "SELECT id_user, name, email FROM users WHERE state = 1";
+    const booksQuery = `
+        SELECT b.id_book, b.name, a.name as author_name, p.name as publisher_name 
+        FROM books b
+        JOIN authors a ON b.id_author = a.id_author
+        JOIN publishers p ON b.id_publisher = p.id_publisher
+        WHERE b.state = 1`;
+
     dbConn.query(loanQuery, [id], (err, loans) => {
         if (err || loans.length === 0) {
             req.flash("error", "Préstamo no encontrado");
@@ -184,9 +193,26 @@ router.get("/edit/:id", (req, res) => {
         }
 
         const loan = loans[0];
-        res.render("loans/edit", {
-            ...loan,
-            messages: {}
+
+        dbConn.query(usersQuery, (err, users) => {
+            if (err) {
+                req.flash("error", "Error al cargar usuarios");
+                return res.redirect("/loans");
+            }
+
+            dbConn.query(booksQuery, (err, books) => {
+                if (err) {
+                    req.flash("error", "Error al cargar libros");
+                    return res.redirect("/loans");
+                }
+
+                res.render("loans/edit", {
+                    ...loan,
+                    users,
+                    books,
+                    messages: {}
+                });
+            });
         });
     });
 });
@@ -194,38 +220,65 @@ router.get("/edit/:id", (req, res) => {
 // Actualizar préstamo
 router.post("/update/:id", (req, res) => {
     const id = req.params.id;
-    const { return_due, returned } = req.body;
+    const { id_user, id_book, loan_date, status, return_date } = req.body;
 
-    if (!return_due) {
-        return res.render("loans/edit", {
-            id_loan: id,
-            ...req.body,
-            messages: { error: "La fecha de devolución es obligatoria" }
-        });
-    }
-
-    const updateData = {
-        return_due,
-        returned: returned ? 1 : 0,
-        returned_at: returned ? new Date() : null
-    };
-
-    dbConn.query(
-        "UPDATE loans SET ? WHERE id_loan = ?",
-        [updateData, id],
-        (err) => {
-            if (err) {
-                return res.render("loans/edit", {
-                    id_loan: id,
-                    ...req.body,
-                    messages: { error: err.message }
-                });
-            }
-
-            req.flash("success", "Préstamo actualizado correctamente");
-            res.redirect("/loans");
+    // Primero, obtenemos los datos actuales del préstamo para recargar la página correctamente en caso de error
+    const loanQuery = "SELECT * FROM loans WHERE id_loan = ?";
+    dbConn.query(loanQuery, [id], (err, loans) => {
+        if (err || loans.length === 0) {
+            req.flash("error", "Préstamo no encontrado");
+            return res.redirect("/loans");
         }
-    );
+
+        const loan = loans[0];
+        
+        // Preparamos los datos de actualización
+        const updateData = {
+            id_user: id_user || loan.id_user,
+            id_book: id_book || loan.id_book,
+            loan_date: loan_date || loan.loan_date
+        };
+
+        // Si el estado es 'RETURNED' (devuelto), actualizamos los campos correspondientes
+        if (status === 'RETURNED') {
+            updateData.returned = 1;
+            updateData.returned_at = return_date || new Date();
+        } else {
+            updateData.returned = 0;
+            updateData.returned_at = null;
+        }
+
+        // Actualizamos el préstamo en la base de datos
+        dbConn.query(
+            "UPDATE loans SET ? WHERE id_loan = ?",
+            [updateData, id],
+            (err) => {
+                if (err) {
+                    // En caso de error, recargamos la página con los datos y el mensaje de error
+                    const usersQuery = "SELECT id_user, name, email FROM users WHERE state = 1";
+                    const booksQuery = "SELECT id_book, name FROM books WHERE state = 1";
+                    
+                    dbConn.query(usersQuery, (err, users) => {
+                        dbConn.query(booksQuery, (err, books) => {
+                            return res.render("loans/edit", {
+                                id_loan: id,
+                                ...req.body,
+                                users: users || [],
+                                books: books || [],
+                                messages: { error: err.message },
+                                loan_date: new Date(loan_date || loan.loan_date),
+                                return_date: return_date ? new Date(return_date) : (loan.returned_at ? new Date(loan.returned_at) : null),
+                                status: status || (loan.returned ? 'RETURNED' : 'ACTIVE')
+                            });
+                        });
+                    });
+                } else {
+                    req.flash("success", "Préstamo actualizado correctamente");
+                    res.redirect("/loans");
+                }
+            }
+        );
+    });
 });
 
 // Eliminar préstamo (soft delete)
@@ -325,6 +378,30 @@ router.get("/continue/:id", (req, res) => {
                     }
                 );
             });
+        }
+    );
+});
+
+// Devolver libro (marcar como devuelto)
+router.get("/return/:id", (req, res) => {
+    const id = req.params.id;
+    const returnData = {
+        returned: 1,
+        returned_at: new Date()
+    };
+
+    dbConn.query(
+        "UPDATE loans SET ? WHERE id_loan = ? AND state = 1 AND returned = 0",
+        [returnData, id],
+        (err, result) => {
+            if (err) {
+                req.flash("error", "Error al procesar la devolución: " + err.message);
+            } else if (result.affectedRows === 0) {
+                req.flash("error", "El préstamo no existe o ya ha sido devuelto");
+            } else {
+                req.flash("success", "Libro devuelto correctamente");
+            }
+            res.redirect("/loans");
         }
     );
 });

@@ -35,50 +35,42 @@
                                         <form action="/loans/update/<%= id_loan %>" method="POST">
                                             <div class="form-group">
                                                 <label>Usuario:</label>
-                                                <select name="id_user" class="form-control" required
-                                                    <%=status==='RETURNED' ? 'disabled' : '' %>>
+                                                <select name="id_user" class="form-control" required <%= returned ? 'disabled' : '' %>>
                                                     <option value="">Seleccione un usuario</option>
                                                     <% users.forEach(function(user) { %>
-                                                        <option value="<%= user.id_user %>" <%=id_user==user.id_user
-                                                            ? 'selected' : '' %>>
-                                                            <%= user.name %>
+                                                        <option value="<%= user.id_user %>" <%= id_user==user.id_user ? 'selected' : '' %>>
+                                                            <%= user.name %> (<%= user.email %>)
                                                         </option>
-                                                        <% }); %>
+                                                    <% }); %>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label>Libro:</label>
-                                                <select name="id_book" class="form-control" required
-                                                    <%=status==='RETURNED' ? 'disabled' : '' %>>
+                                                <select name="id_book" class="form-control" required <%= returned ? 'disabled' : '' %>>
                                                     <option value="">Seleccione un libro</option>
                                                     <% books.forEach(function(book) { %>
-                                                        <option value="<%= book.id_book %>" <%=id_book==book.id_book
-                                                            ? 'selected' : '' %>>
-                                                            <%= book.name %>
+                                                        <option value="<%= book.id_book %>" <%= id_book==book.id_book ? 'selected' : '' %>>
+                                                            <%= book.name %> - <%= book.author_name %> (<%= book.publisher_name %>)
                                                         </option>
-                                                        <% }); %>
+                                                    <% }); %>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label>Fecha de Préstamo:</label>
                                                 <input type="date" name="loan_date" class="form-control"
-                                                    value="<%= loan_date.toISOString().split('T')[0] %>" required
-                                                    <%=status==='RETURNED' ? 'disabled' : '' %>>
+                                                    value="<%= new Date(loan_date).toISOString().split('T')[0] %>" required>
                                             </div>
                                             <div class="form-group">
                                                 <label>Estado:</label>
-                                                <select name="status" class="form-control" required>
-                                                    <option value="ACTIVE" <%=status==='ACTIVE' ? 'selected' : '' %>
-                                                        >Prestado</option>
-                                                    <option value="RETURNED" <%=status==='RETURNED' ? 'selected' : '' %>
-                                                        >Devuelto</option>
+                                                <select name="status" class="form-control" required id="loanStatus">
+                                                    <option value="ACTIVE" <%= !returned ? 'selected' : '' %>>Prestado</option>
+                                                    <option value="RETURNED" <%= returned ? 'selected' : '' %>>Devuelto</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" id="returnDateGroup">
                                                 <label>Fecha de Devolución:</label>
-                                                <input type="date" name="return_date" class="form-control"
-                                                    value="<%= return_date ? return_date.toISOString().split('T')[0] : '' %>"
-                                                    <%=status !=='RETURNED' ? 'disabled' : '' %>>
+                                                <input type="date" name="return_date" class="form-control" id="returnDateInput"
+                                                    value="<%= returned_at ? new Date(returned_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>">
                                             </div>
                                             <div class="mt-4">
                                                 <button type="submit" class="btn btn-primary">
@@ -100,6 +92,31 @@
 
         <!-- Font Awesome -->
         <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var loanStatus = document.getElementById('loanStatus');
+                var returnDateInput = document.getElementById('returnDateInput');
+                var returnDateGroup = document.getElementById('returnDateGroup');
+                
+                // Función para mostrar u ocultar el campo de fecha de devolución según el estado
+                function toggleReturnDateField() {
+                    if (loanStatus.value === 'RETURNED') {
+                        returnDateGroup.style.display = 'block';
+                        returnDateInput.required = true;
+                    } else {
+                        returnDateGroup.style.display = 'none';
+                        returnDateInput.required = false;
+                    }
+                }
+                
+                // Ejecutar al cargar la página
+                toggleReturnDateField();
+                
+                // Añadir evento para cambio de estado
+                loanStatus.addEventListener('change', toggleReturnDateField);
+            });
+        </script>
 </body>
 
 </html>
