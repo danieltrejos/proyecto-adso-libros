@@ -100,13 +100,13 @@
                                                             <ul class="pagination justify-content-center">
                                                                 <li
                                                                     class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-                                                                    <a class="page-link"
+                                                                    <a class="page-link custom-green"
                                                                         href="/users?page=<%= currentPage - 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&laquo;</a>
                                                                 </li>
                                                                 <% for (let i=1; i <=totalPages; i++) { %>
                                                                     <li
                                                                         class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                                                        <a class="page-link"
+                                                                        <a class="page-link custom-green"
                                                                             href="/users?page=<%= i %><%= searchTerm ? '&search=' + searchTerm : '' %>">
                                                                             <%= i %>
                                                                         </a>
@@ -114,7 +114,7 @@
                                                                     <% } %>
                                                                         <li
                                                                             class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-                                                                            <a class="page-link"
+                                                                            <a class="page-link custom-green"
                                                                                 href="/users?page=<%= currentPage + 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&raquo;</a>
                                                                         </li>
                                                             </ul>
