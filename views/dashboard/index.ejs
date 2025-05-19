@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Control - BiblioApp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <style>
+        .dashboard-card {
+            transition: all 0.3s ease;
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-icon {
+            background-color: #f0fdf4;
+            color: #059669;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover .dashboard-icon {
+            background-color: #059669;
+            color: white;
+        }
+
+        .btn-action {
+            transition: all 0.3s ease;
+            background-color: #059669;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.375rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-action:hover {
+            background-color: #047857;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-ver-listado {
+            background-color: transparent;
+            color: #059669;
+            border: 1px solid #059669;
+            text-decoration: none;
+        }
+
+        .btn-ver-listado:hover {
+            background-color: #059669;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="bg-emerald-50 flex min-h-screen w-screen">
+    <!-- SIDEBAR -->
+    <%- include('../plantillas/sidebar') %>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="flex flex-col flex-1 w-full min-h-screen">
+            <!-- HEADER -->
+            <%- include('../plantillas/header1') %>
+
+                <!-- MAIN -->
+                <main class="flex-1 p-4">
+                    <div class="container">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h1 class="h3 mb-2">Panel de Control</h1>
+                                <p class="text-muted">Bienvenido al panel de administración de BiblioApp</p>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <!-- Libros -->
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="dashboard-card bg-white rounded-lg p-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="dashboard-icon rounded-circle p-3 me-3">
+                                            <i class="fas fa-book h5 mb-0"></i>
+                                        </div>
+                                        <h3 class="h5 mb-0">Gestión de Libros</h3>
+                                    </div>
+                                    <p class="text-muted mb-4">Administra el catálogo de libros, añade nuevos títulos y
+                                        actualiza la información existente.</p>
+                                    <div class="d-flex gap-2">
+                                        <a href="/books/add" class="btn-action">
+                                            <i class="fas fa-plus"></i> Añadir Libro
+                                        </a>
+                                        <a href="/books" class="btn-action btn-ver-listado">
+                                            <i class="fas fa-list"></i> Ver Listado
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Préstamos -->
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="dashboard-card bg-white rounded-lg p-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="dashboard-icon rounded-circle p-3 me-3">
+                                            <i class="fas fa-clock h5 mb-0"></i>
+                                        </div>
+                                        <h3 class="h5 mb-0">Gestión de Préstamos</h3>
+                                    </div>
+                                    <p class="text-muted mb-4">Controla los préstamos activos y el historial de
+                                        devoluciones.</p>
+                                    <div class="d-flex gap-2">
+                                        <a href="/loans/add" class="btn-action">
+                                            <i class="fas fa-plus"></i> Añadir Préstamo
+                                        </a>
+                                        <a href="/loans" class="btn-action btn-ver-listado">
+                                            <i class="fas fa-list"></i> Ver Listado
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Autores -->
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="dashboard-card bg-white rounded-lg p-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="dashboard-icon rounded-circle p-3 me-3">
+                                            <i class="fas fa-user-edit h5 mb-0"></i>
+                                        </div>
+                                        <h3 class="h5 mb-0">Gestión de Autores</h3>
+                                    </div>
+                                    <p class="text-muted mb-4">Administra la información de los autores y sus obras en
+                                        el sistema.</p>
+                                    <div class="d-flex gap-2">
+                                        <a href="/authors/add" class="btn-action">
+                                            <i class="fas fa-plus"></i> Añadir Autor
+                                        </a>
+                                        <a href="/authors" class="btn-action btn-ver-listado">
+                                            <i class="fas fa-list"></i> Ver Listado
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Categorías -->
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="dashboard-card bg-white rounded-lg p-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="dashboard-icon rounded-circle p-3 me-3">
+                                            <i class="fas fa-tags h5 mb-0"></i>
+                                        </div>
+                                        <h3 class="h5 mb-0">Gestión de Categorías</h3>
+                                    </div>
+                                    <p class="text-muted mb-4">Organiza los libros por géneros y categorías para una
+                                        mejor clasificación.</p>
+                                    <div class="d-flex gap-2">
+                                        <a href="/categories/add" class="btn-action">
+                                            <i class="fas fa-plus"></i> Añadir Categoría
+                                        </a>
+                                        <a href="/categories" class="btn-action btn-ver-listado">
+                                            <i class="fas fa-list"></i> Ver Listado
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Editoriales -->
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="dashboard-card bg-white rounded-lg p-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="dashboard-icon rounded-circle p-3 me-3">
+                                            <i class="fas fa-building h5 mb-0"></i>
+                                        </div>
+                                        <h3 class="h5 mb-0">Gestión de Editoriales</h3>
+                                    </div>
+                                    <p class="text-muted mb-4">Administra la información de las editoriales y sus
+                                        publicaciones.</p>
+                                    <div class="d-flex gap-2">
+                                        <a href="/publishers/add" class="btn-action">
+                                            <i class="fas fa-plus"></i> Añadir Editorial
+                                        </a>
+                                        <a href="/publishers" class="btn-action btn-ver-listado">
+                                            <i class="fas fa-list"></i> Ver Listado
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <!-- Usuarios -->
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <div class="dashboard-card bg-white rounded-lg p-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="dashboard-icon rounded-circle p-3 me-3">
+                                            <i class="fas fa-users h5 mb-0"></i>
+                                        </div>
+                                        <h3 class="h5 mb-0">Gestión de Usuarios</h3>
+                                    </div>
+                                    <p class="text-muted mb-4">Añade y administra los usuarios del sistema y sus roles.
+                                    </p>
+                                    <div class="d-flex gap-2">
+                                        <a href="/users/add" class="btn-action">
+                                            <i class="fas fa-plus"></i> Añadir Usuario
+                                        </a>
+                                        <a href="/users" class="btn-action btn-ver-listado">
+                                            <i class="fas fa-list"></i> Ver Listado
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- FOOTER -->
+                <%- include('../plantillas/footer') %>
+        </div>
+
+        <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

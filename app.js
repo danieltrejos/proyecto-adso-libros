@@ -16,6 +16,7 @@ const authorsRouter = require("./routes/authors");
 const categoriesRouter = require("./routes/categories");
 const publishersRouter = require("./routes/publishers");
 const loansRouter = require("./routes/loans");
+const dashboardRouter = require("./routes/dashboard");
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use("/authors", authorsRouter);
 app.use("/categories", categoriesRouter);
 app.use("/publishers", publishersRouter);
 app.use("/loans", loansRouter);
+app.use("/dashboard", dashboardRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

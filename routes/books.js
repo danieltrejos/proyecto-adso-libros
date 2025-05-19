@@ -337,4 +337,74 @@ router.get("/delete/:id", (req, res) => {
   );
 });
 
+// Vista de restauración de libros eliminados
+router.get("/restore", (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 5;
+  const offset = (page - 1) * limit;
+  const search = req.query.search || "";
+
+  let query = `
+        SELECT b.*, a.name as author_name, c.name as category_name, p.name as publisher_name 
+        FROM books b
+        JOIN authors a ON b.id_author = a.id_author
+        JOIN categories c ON b.id_category = c.id_category
+        JOIN publishers p ON b.id_publisher = p.id_publisher
+        WHERE (b.name LIKE ? OR a.name LIKE ?) AND b.state = 0 
+        LIMIT ? OFFSET ?`;
+  let countQuery = `
+        SELECT COUNT(*) AS total 
+        FROM books b
+        JOIN authors a ON b.id_author = a.id_author
+        WHERE (b.name LIKE ? OR a.name LIKE ?) AND b.state = 0`;
+  const searchPattern = `%${search}%`;
+
+  dbConn.query(countQuery, [searchPattern, searchPattern], (err, countResult) => {
+    if (err)
+      return res.render("books/restore", {
+        data: [],
+        currentPage: 1,
+        totalPages: 1,
+        searchTerm: "",
+        messages: { error: err.message },
+      });
+
+    const total = countResult[0].total;
+    const totalPages = Math.ceil(total / limit);
+
+    dbConn.query(query, [searchPattern, searchPattern, limit, offset], (err, result) => {
+      if (err) {
+        res.render("books/restore", {
+          data: [],
+          currentPage: 1,
+          totalPages: 1,
+          searchTerm: "",
+          messages: { error: err.message },
+        });
+      } else {
+        res.render("books/restore", {
+          data: result,
+          currentPage: page,
+          totalPages,
+          searchTerm: search,
+          messages: {},
+        });
+      }
+    });
+  });
+});
+
+// Recuperar libro (cambiar state de 0 a 1)
+router.get("/recover/:id", (req, res) => {
+  dbConn.query(
+    "UPDATE books SET state = 1 WHERE id_book = ?",
+    [req.params.id],
+    (err) => {
+      if (err) req.flash("error", err.message);
+      else req.flash("success", "Libro recuperado exitosamente");
+      res.redirect("/books/restore");
+    }
+  );
+});
+
 module.exports = router;

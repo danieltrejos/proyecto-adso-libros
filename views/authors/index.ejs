@@ -39,7 +39,8 @@
                                             <div class="card-body">
                                                 <form action="/authors" method="GET" class="form-inline mb-3">
                                                     <input type="text" name="search" value="<%= searchTerm %>"
-                                                        placeholder="Buscar autor..." class="form-control mr-2">
+                                                        placeholder="Buscar autor..." class="form-control mr-2"
+                                                        style="min-width: 300px;">
                                                     <button type="submit"
                                                         class="btn btn-outline-success">Buscar</button>
                                                     <% if (searchTerm) { %>
@@ -86,15 +87,29 @@
                                                     <% if(totalPages> 1) { %>
                                                         <nav aria-label="Page navigation" class="mt-4">
                                                             <ul class="pagination justify-content-center">
+                                                                <!-- Botón anterior -->
+                                                                <li
+                                                                    class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                                                    <a class="page-link custom-green"
+                                                                        href="/authors?page=<%= currentPage - 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>"
+                                                                        tabindex="-1">«</a>
+                                                                </li>
+                                                                <!-- Números de página -->
                                                                 <% for(let i=1; i <=totalPages; i++) { %>
                                                                     <li
                                                                         class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                                                        <a class="page-link"
+                                                                        <a class="page-link custom-green"
                                                                             href="/authors?page=<%= i %><%= searchTerm ? '&search=' + searchTerm : '' %>">
                                                                             <%= i %>
                                                                         </a>
                                                                     </li>
                                                                     <% } %>
+                                                                        <!-- Botón siguiente -->
+                                                                        <li
+                                                                            class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                                                            <a class="page-link custom-green"
+                                                                                href="/authors?page=<%= currentPage + 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">»</a>
+                                                                        </li>
                                                             </ul>
                                                         </nav>
                                                         <% } %>

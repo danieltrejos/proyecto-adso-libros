@@ -45,14 +45,21 @@
                                         <div class="card">
                                             <div class="card-header d-flex justify-content-between align-items-center">
                                                 <h5 class="mb-0">📚 Listado de libros</h5>
-                                                <a href="/books/add" class="btn btn-success">Añadir Libros</a>
+                                                <div>
+                                                    <a href="/books/restore" class="btn btn-outline-success mr-2">
+                                                        <i class="fas fa-undo"></i> Recuperar
+                                                    </a>
+                                                    <a href="/books/add" class="btn btn-success">
+                                                        <i class="fas fa-plus"></i> Añadir Libros
+                                                    </a>
+                                                </div>
                                             </div>
 
                                             <div class="card-body">
                                                 <form method="GET" action="/books" class="form-inline mb-3">
                                                     <input type="text" name="search" value="<%= searchTerm %>"
                                                         placeholder="Buscar por nombre o autor..."
-                                                        class="form-control mr-2">
+                                                        class="form-control mr-2" style="min-width: 300px;">
                                                     <button type="submit"
                                                         class="btn btn-outline-success">Buscar</button>
                                                     <% if (searchTerm) { %>
@@ -126,13 +133,13 @@
                                                             <ul class="pagination justify-content-center">
                                                                 <li
                                                                     class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-                                                                    <a class="page-link"
+                                                                    <a class="page-link custom-green"
                                                                         href="/books?page=<%= currentPage - 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&laquo;</a>
                                                                 </li>
                                                                 <% for (let i=1; i <=totalPages; i++) { %>
                                                                     <li
                                                                         class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                                                        <a class="page-link"
+                                                                        <a class="page-link custom-green"
                                                                             href="/books?page=<%= i %><%= searchTerm ? '&search=' + searchTerm : '' %>">
                                                                             <%= i %>
                                                                         </a>
@@ -140,7 +147,7 @@
                                                                     <% } %>
                                                                         <li
                                                                             class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-                                                                            <a class="page-link"
+                                                                            <a class="page-link custom-green"
                                                                                 href="/books?page=<%= currentPage + 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&raquo;</a>
                                                                         </li>
                                                             </ul>

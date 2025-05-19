@@ -36,7 +36,7 @@ router.get("/", (req, res) => {
                 currentPage: 1,
                 totalPages: 1,
                 searchTerm: "",
-                messages: { error: err.message }
+                messages: { error: err.message },
             });
         }
 
@@ -45,33 +45,35 @@ router.get("/", (req, res) => {
 
         dbConn.query(query, [searchPattern, searchPattern, limit, offset], (err, result) => {
             if (err) {
-                return res.render("loans/index", {
+                res.render("loans/index", {
                     data: [],
                     currentPage: 1,
                     totalPages: 1,
                     searchTerm: "",
-                    messages: { error: err.message }
+                    messages: { error: err.message },
+                });
+            } else {
+                res.render("loans/index", {
+                    data: result,
+                    currentPage: page,
+                    totalPages,
+                    searchTerm: search,
+                    messages: {},
                 });
             }
-
-            res.render("loans/index", {
-                data: result,
-                currentPage: page,
-                totalPages,
-                searchTerm: search,
-                messages: {}
-            });
         });
     });
 });
 
-// Página de agregar préstamo
+// Página de agregar
 router.get("/add", (req, res) => {
+    // Cargar usuarios y libros para los selectores
     const usersQuery = "SELECT id_user, name, email FROM users WHERE state = 1";
     const booksQuery = `
-        SELECT b.id_book, b.name, a.name as author_name
+        SELECT b.id_book, b.name, a.name as author_name, p.name as publisher_name 
         FROM books b
         JOIN authors a ON b.id_author = a.id_author
+        JOIN publishers p ON b.id_publisher = p.id_publisher
         WHERE b.state = 1`;
 
     dbConn.query(usersQuery, (err, users) => {
@@ -105,8 +107,22 @@ router.get("/add", (req, res) => {
 router.post("/add", (req, res) => {
     const { id_user, id_book, return_due } = req.body;
 
+    // Validar campos requeridos
     if (!id_user || !id_book || !return_due) {
-        return reloadAddPage(res, "Todos los campos son requeridos");
+        return reloadAddPage(res, "Por favor complete todos los campos");
+    }
+
+    // Validar fecha de devolución
+    const returnDate = new Date(return_due);
+    const today = new Date();
+    const maxDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+    if (returnDate < today) {
+        return reloadAddPage(res, "La fecha de devolución no puede ser en el pasado");
+    }
+
+    if (returnDate > maxDate) {
+        return reloadAddPage(res, "El período máximo de préstamo es de 30 días");
     }
 
     const loanData = {
@@ -122,14 +138,38 @@ router.post("/add", (req, res) => {
         if (err) {
             return reloadAddPage(res, err.message);
         }
+
         req.flash("success", "Préstamo registrado correctamente");
         res.redirect("/loans");
     });
 });
 
-// Página de editar préstamo
+// Función auxiliar para recargar la página de agregar con error
+function reloadAddPage(res, errorMessage) {
+    const usersQuery = "SELECT id_user, name, email FROM users WHERE state = 1";
+    const booksQuery = `
+        SELECT b.id_book, b.name, a.name as author_name, p.name as publisher_name 
+        FROM books b
+        JOIN authors a ON b.id_author = a.id_author
+        JOIN publishers p ON b.id_publisher = p.id_publisher
+        WHERE b.state = 1`;
+
+    dbConn.query(usersQuery, (err, users) => {
+        dbConn.query(booksQuery, (err, books) => {
+            return res.render("loans/add", {
+                users: users || [],
+                books: books || [],
+                messages: { error: errorMessage }
+            });
+        });
+    });
+}
+
+// Editar préstamo
 router.get("/edit/:id", (req, res) => {
     const id = req.params.id;
+
+    // Obtener datos del préstamo
     const loanQuery = `
         SELECT l.*, u.name as user_name, b.name as book_name 
         FROM loans l
@@ -145,7 +185,7 @@ router.get("/edit/:id", (req, res) => {
 
         const loan = loans[0];
         res.render("loans/edit", {
-            loan,
+            ...loan,
             messages: {}
         });
     });
@@ -154,15 +194,20 @@ router.get("/edit/:id", (req, res) => {
 // Actualizar préstamo
 router.post("/update/:id", (req, res) => {
     const id = req.params.id;
-    const { return_due } = req.body;
+    const { return_due, returned } = req.body;
 
     if (!return_due) {
-        req.flash("error", "La fecha de devolución es requerida");
-        return res.redirect("/loans/edit/" + id);
+        return res.render("loans/edit", {
+            id_loan: id,
+            ...req.body,
+            messages: { error: "La fecha de devolución es obligatoria" }
+        });
     }
 
     const updateData = {
-        return_due: new Date(return_due)
+        return_due,
+        returned: returned ? 1 : 0,
+        returned_at: returned ? new Date() : null
     };
 
     dbConn.query(
@@ -170,56 +215,118 @@ router.post("/update/:id", (req, res) => {
         [updateData, id],
         (err) => {
             if (err) {
-                req.flash("error", err.message);
-                return res.redirect("/loans/edit/" + id);
+                return res.render("loans/edit", {
+                    id_loan: id,
+                    ...req.body,
+                    messages: { error: err.message }
+                });
             }
+
             req.flash("success", "Préstamo actualizado correctamente");
             res.redirect("/loans");
         }
     );
 });
 
-// Marcar préstamo como devuelto
-router.post("/return/:id", (req, res) => {
-    const id = req.params.id;
-
-    const updateData = {
-        returned: 1,
-        returned_at: new Date()
-    };
-
+// Eliminar préstamo (soft delete)
+router.get("/delete/:id", (req, res) => {
     dbConn.query(
-        "UPDATE loans SET ? WHERE id_loan = ? AND returned = 0",
-        [updateData, id],
+        "UPDATE loans SET state = 0 WHERE id_loan = ?",
+        [req.params.id],
         (err) => {
-            if (err) {
-                req.flash("error", err.message);
-            } else {
-                req.flash("success", "Libro devuelto correctamente");
-            }
+            if (err) req.flash("error", err.message);
+            else req.flash("success", "Préstamo eliminado correctamente");
             res.redirect("/loans");
         }
     );
 });
 
-// Función auxiliar para recargar la página de agregar con error
-function reloadAddPage(res, errorMessage) {
-    const usersQuery = "SELECT id_user, name, email FROM users WHERE state = 1";
-    const booksQuery = `
-        SELECT b.id_book, b.name, a.name as author_name
-        FROM books b
-        JOIN authors a ON b.id_author = a.id_author
-        WHERE b.state = 1`;
+// Continue loan
+router.get("/continue/:id", (req, res) => {
+    const id = req.params.id;
 
-    dbConn.query(usersQuery, (err, users) => {
-        dbConn.query(booksQuery, (err, books) => {
-            return res.render("loans/add", {
-                users: users || [],
-                books: books || [],
-                messages: { error: errorMessage }
+    // First get the current loan details
+    dbConn.query(
+        "SELECT * FROM loans WHERE id_loan = ? AND state = 1",
+        [id],
+        (err, loans) => {
+            if (err || loans.length === 0) {
+                req.flash("error", "Préstamo no encontrado");
+                return res.redirect("/loans");
+            }
+
+            const currentLoan = loans[0];
+
+            // Only allow continuing active, non-returned loans
+            if (currentLoan.returned) {
+                req.flash("error", "No se puede continuar un préstamo ya devuelto");
+                return res.redirect("/loans");
+            }
+
+            // Start a transaction to ensure data consistency
+            dbConn.beginTransaction((err) => {
+                if (err) {
+                    req.flash("error", err.message);
+                    return res.redirect("/loans");
+                }
+
+                // 1. Mark current loan as returned
+                const updateCurrentLoan = {
+                    returned: 1,
+                    returned_at: new Date()
+                };
+
+                dbConn.query(
+                    "UPDATE loans SET ? WHERE id_loan = ?",
+                    [updateCurrentLoan, id],
+                    (err) => {
+                        if (err) {
+                            return dbConn.rollback(() => {
+                                req.flash("error", err.message);
+                                res.redirect("/loans");
+                            });
+                        }
+
+                        // 2. Create new loan with same book and user
+                        const newLoan = {
+                            id_user: currentLoan.id_user,
+                            id_book: currentLoan.id_book,
+                            loan_date: new Date(),
+                            // Set return_due to 15 days from now by default
+                            return_due: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+                            returned: 0,
+                            state: 1
+                        };
+
+                        dbConn.query(
+                            "INSERT INTO loans SET ?",
+                            newLoan,
+                            (err) => {
+                                if (err) {
+                                    return dbConn.rollback(() => {
+                                        req.flash("error", err.message);
+                                        res.redirect("/loans");
+                                    });
+                                }
+
+                                // Commit the transaction
+                                dbConn.commit((err) => {
+                                    if (err) {
+                                        return dbConn.rollback(() => {
+                                            req.flash("error", err.message);
+                                            res.redirect("/loans");
+                                        });
+                                    }
+                                    req.flash("success", "Préstamo continuado correctamente");
+                                    res.redirect("/loans");
+                                });
+                            }
+                        );
+                    }
+                );
             });
-        });
-    });
-}
+        }
+    );
+});
 
 module.exports = router;

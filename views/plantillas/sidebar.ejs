@@ -1,19 +1,127 @@
-<div class="hidden md:flex flex-col w-64 bg-gray-800 min-h-screen">
-    <div class="flex items-center justify-center h-16 bg-gray-900">
-        <span class="text-white font-bold uppercase">Biblio App</span>
+<!-- Sidebar principal -->
+<div class="d-none d-md-flex flex-column min-vh-100" style="width: 250px; background-color: #1E2938;">
+    <!-- Logo/Título -->
+    <div class="d-flex align-items-center justify-content-center py-4 border-bottom border-secondary"
+        style="background-color: #1E2938;">
+        <span class="text-white font-weight-bold text-uppercase">Biblio App</span>
     </div>
 
-    <div class="flex flex-col flex-1 overflow-y-auto">
-        <nav class="flex-1 px-2 py-4 bg-gray-800">
-            <a href="/books" class="flex items-center px-4 py-2 text-gray-100 hover:bg-gray-700">📚 Libros</a>
-            <a href="/authors" class="flex items-center px-4 py-2 mt-2 text-gray-100 hover:bg-gray-700">👤 Autores</a>
-            <a href="/categories" class="flex items-center px-4 py-2 mt-2 text-gray-100 hover:bg-gray-700">🏷️
-                Categorías</a>
-            <a href="/publishers" class="flex items-center px-4 py-2 mt-2 text-gray-100 hover:bg-gray-700">🏢
-                Editoriales</a>
-            <a href="/loans" class="flex items-center px-4 py-2 mt-2 text-gray-100 hover:bg-gray-700">📖
-                Préstamos</a>
-            <a href="/users" class="flex items-center px-4 py-2 mt-2 text-gray-100 hover:bg-gray-700">👥 Usuarios</a>
-        </nav>
-    </div>
+    <!-- Links de navegación -->
+    <nav class="nav flex-column py-3">
+        <a href="/dashboard"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">📊</span> Dashboard
+        </a>
+        <a href="/books"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">📚</span> Libros
+        </a>
+        <a href="/authors"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">👤</span> Autores
+        </a>
+        <a href="/categories"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">🏷️</span> Categorías
+        </a>
+        <a href="/publishers"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">🏢</span> Editoriales
+        </a>
+        <a href="/loans"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">📖</span> Préstamos
+        </a>
+        <a href="/users"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">👥</span> Usuarios
+        </a>
+    </nav>
 </div>
+
+<!-- Sidebar móvil -->
+<div class="d-md-none position-fixed top-0 start-0 h-100"
+    style="width: 250px; transform: translateX(-100%); transition: transform 0.3s ease-in-out; z-index: 1050; background-color: #1E2938;"
+    id="mobileSidebar">
+    <!-- Logo/Título -->
+    <div class="d-flex align-items-center justify-content-between py-4 px-4 border-bottom border-secondary"
+        style="background-color: #1E2938;">
+        <span class="text-white font-weight-bold text-uppercase">Biblio App</span>
+        <button class="btn btn-link text-white p-0" onclick="toggleMobileSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Links de navegación -->
+    <nav class="nav flex-column py-3">
+        <a href="/dashboard"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">📊</span> Dashboard
+        </a>
+        <a href="/books"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">📚</span> Libros
+        </a>
+        <a href="/authors"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">👤</span> Autores
+        </a>
+        <a href="/categories"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">🏷️</span> Categorías
+        </a>
+        <a href="/publishers"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">🏢</span> Editoriales
+        </a>
+        <a href="/loans"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">📖</span> Préstamos
+        </a>
+        <a href="/users"
+            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+            <span class="mr-3">👥</span> Usuarios
+        </a>
+    </nav>
+</div>
+
+<!-- Botón toggle para móvil -->
+<button class="btn position-fixed"
+    style="top: 10px; left: 10px; z-index: 1040; background-color: #1E2938; color: white;"
+    onclick="toggleMobileSidebar()">
+    <i class="fas fa-bars"></i>
+</button>
+
+<!-- Overlay para móvil -->
+<div class="d-md-none position-fixed top-0 start-0 w-100 h-100"
+    style="opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out; z-index: 1040; background-color: rgba(30, 41, 56, 0.5);"
+    id="sidebarOverlay" onclick="toggleMobileSidebar()">
+</div>
+
+<style>
+    .hover-effect {
+        transition: background-color 0.3s ease;
+    }
+
+    .hover-effect:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #10B981 !important;
+        /* Color emerald-600 */
+    }
+
+    /* Estilos para el sidebar móvil abierto */
+    .sidebar-open #mobileSidebar {
+        transform: translateX(0);
+    }
+
+    .sidebar-open #sidebarOverlay {
+        opacity: 0.5;
+        visibility: visible;
+    }
+</style>
+
+<script>
+    function toggleMobileSidebar() {
+        document.body.classList.toggle('sidebar-open');
+    }
+</script>
