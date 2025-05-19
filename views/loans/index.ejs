@@ -97,9 +97,8 @@
                                                                         </td>
                                                                         <td>
                                                                             <span
-                                                                                class="badge badge-<%= loan.status === 'RETURNED' ? 'success' : 'warning' %>">
-                                                                                <%= loan.status==='RETURNED'
-                                                                                    ? 'Devuelto' : 'Prestado' %>
+                                                                                class="badge badge-<%= loan.returned ? 'success' : 'warning' %>">
+                                                                                <%= loan.returned ? 'Devuelto' : 'Prestado' %>
                                                                             </span>
                                                                         </td>
                                                                         <td class="text-center">
