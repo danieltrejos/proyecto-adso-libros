@@ -45,7 +45,7 @@
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0">📚 Backup de Libros</h5>
-                                <a href="/books" class="btn btn-secondary">
+                                <a href="/books" class="btn btn-success">
                                     <i class="fas fa-arrow-left"></i> Volver al listado
                                 </a>
                             </div>
@@ -120,10 +120,10 @@
                                     <div class="text-center text-muted py-5">
                                         <% if (searchTerm) { %>
                                             <p>No se encontraron libros eliminados con "<%= searchTerm %>"</p>
-                                            <a href="/books/restore" class="btn btn-outline-secondary">Ver todos los eliminados</a>
+                                            <a href="/books/restore" class="btn btn-outline-success">Ver todos los eliminados</a>
                                         <% } else { %>
                                             <p>No hay libros eliminados para restaurar.</p>
-                                            <a href="/books" class="btn btn-outline-primary">Volver al listado</a>
+                                            <a href="/books" class="btn btn-outline-success">Volver al listado</a>
                                         <% } %>
                                     </div>
                                 <% } %>
