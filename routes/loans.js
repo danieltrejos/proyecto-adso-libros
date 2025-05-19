@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const dbConn = require("../lib/db");
 
-// Listado con búsqueda y paginación
+// Listado con búsqueda y paginación (solo préstamos activos)
 router.get("/", (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 5;
@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
         JOIN users u ON l.id_user = u.id_user
         JOIN books b ON l.id_book = b.id_book
         JOIN authors a ON b.id_author = a.id_author
-        WHERE (u.name LIKE ? OR b.name LIKE ?) AND l.state = 1
+        WHERE (u.name LIKE ? OR b.name LIKE ?) AND l.state = 1 AND l.returned = 0
         ORDER BY l.loan_date DESC
         LIMIT ? OFFSET ?`;
 
@@ -25,7 +25,7 @@ router.get("/", (req, res) => {
         FROM loans l
         JOIN users u ON l.id_user = u.id_user
         JOIN books b ON l.id_book = b.id_book
-        WHERE (u.name LIKE ? OR b.name LIKE ?) AND l.state = 1`;
+        WHERE (u.name LIKE ? OR b.name LIKE ?) AND l.state = 1 AND l.returned = 0`;
 
     const searchPattern = `%${search}%`;
 
@@ -58,7 +58,70 @@ router.get("/", (req, res) => {
                     currentPage: page,
                     totalPages,
                     searchTerm: search,
-                    messages: {},
+                    messages: req.flash(),
+                });
+            }
+        });
+    });
+});
+
+// Listado de devoluciones con búsqueda y paginación
+router.get("/returned", (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
+    const offset = (page - 1) * limit;
+    const search = req.query.search || "";
+
+    let query = `
+        SELECT l.*, u.name as user_name, u.email as user_email,
+               b.name as book_name, a.name as author_name
+        FROM loans l
+        JOIN users u ON l.id_user = u.id_user
+        JOIN books b ON l.id_book = b.id_book
+        JOIN authors a ON b.id_author = a.id_author
+        WHERE (u.name LIKE ? OR b.name LIKE ?) AND l.state = 1 AND l.returned = 1
+        ORDER BY l.returned_at DESC
+        LIMIT ? OFFSET ?`;
+
+    let countQuery = `
+        SELECT COUNT(*) as total
+        FROM loans l
+        JOIN users u ON l.id_user = u.id_user
+        JOIN books b ON l.id_book = b.id_book
+        WHERE (u.name LIKE ? OR b.name LIKE ?) AND l.state = 1 AND l.returned = 1`;
+
+    const searchPattern = `%${search}%`;
+
+    dbConn.query(countQuery, [searchPattern, searchPattern], (err, countResult) => {
+        if (err) {
+            return res.render("loans/returned", {
+                data: [],
+                currentPage: 1,
+                totalPages: 1,
+                searchTerm: "",
+                messages: { error: err.message },
+            });
+        }
+
+        const total = countResult[0].total;
+        const totalPages = Math.ceil(total / limit);
+
+        dbConn.query(query, [searchPattern, searchPattern, limit, offset], (err, result) => {
+            if (err) {
+                res.render("loans/returned", {
+                    data: [],
+                    currentPage: 1,
+                    totalPages: 1,
+                    searchTerm: "",
+                    messages: { error: err.message },
+                });
+            } else {
+                res.render("loans/returned", {
+                    data: result,
+                    currentPage: page,
+                    totalPages,
+                    searchTerm: search,
+                    messages: req.flash(),
                 });
             }
         });

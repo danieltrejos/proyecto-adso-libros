@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Listado de Préstamos</title>
+    <title>Listado de Devoluciones</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
@@ -43,24 +43,21 @@
 
                                         <div class="card shadow-sm">
                                             <div class="card-header d-flex justify-content-between align-items-center">
-                                                <h4 class="mb-0">📖 Listado de Préstamos</h4>
-                                                <div>
-                                                    <a href="/loans/returned" class="btn btn-outline-success mr-2">
-                                                        <i class="fas fa-history"></i> Devoluciones
-                                                    </a>
-                                                    <a href="/loans/add" class="btn btn-success">Añadir Préstamo</a>
-                                                </div>
+                                                <h4 class="mb-0">📚 Listado de Libros Devueltos</h4>
+                                                <a href="/loans" class="btn btn-outline-primary">
+                                                    <i class="fas fa-arrow-left"></i> Ver Préstamos Activos
+                                                </a>
                                             </div>
 
                                             <div class="card-body">
-                                                <form method="GET" action="/loans" class="form-inline mb-3">
+                                                <form method="GET" action="/loans/returned" class="form-inline mb-3">
                                                     <input type="text" name="search" value="<%= searchTerm %>"
                                                         placeholder="Buscar por usuario o libro..."
                                                         class="form-control mr-2" style="min-width: 300px;">
                                                     <button type="submit"
                                                         class="btn btn-outline-success">Buscar</button>
                                                     <% if (searchTerm) { %>
-                                                        <a href="/loans"
+                                                        <a href="/loans/returned"
                                                             class="btn btn-outline-secondary ml-2">Limpiar</a>
                                                         <% } %>
                                                 </form>
@@ -74,10 +71,9 @@
                                                                     <th style="width: 15%">Usuario</th>
                                                                     <th style="width: 20%">Libro</th>
                                                                     <th style="width: 12%">Fecha Préstamo</th>
+                                                                    <th style="width: 12%">Fecha Límite</th>
                                                                     <th style="width: 12%">Fecha Devolución</th>
                                                                     <th style="width: 10%">Estado</th>
-                                                                    <th style="width: 26%" class="text-center">Acciones
-                                                                    </th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -93,31 +89,18 @@
                                                                             <%= loan.book_name %>
                                                                         </td>
                                                                         <td>
-                                                                            <%= new
-                                                                                Date(loan.loan_date).toLocaleDateString()
-                                                                                %>
+                                                                            <%= new Date(loan.loan_date).toLocaleDateString() %>
                                                                         </td>
                                                                         <td>
                                                                             <%= new Date(loan.return_due).toLocaleDateString() %>
                                                                         </td>
                                                                         <td>
-                                                                            <span
-                                                                                class="badge badge-<%= loan.returned ? 'success' : 'warning' %>">
-                                                                                <%= loan.returned ? 'Devuelto' : 'Prestado' %>
-                                                                            </span>
+                                                                            <%= new Date(loan.returned_at).toLocaleDateString() %>
                                                                         </td>
-                                                                        <td class="text-center">
-                                                                            <a href="/loans/edit/<%= loan.id_loan %>"
-                                                                                class="btn btn-sm btn-warning">
-                                                                                <i class="fas fa-edit"></i> Editar
-                                                                            </a>
-                                                                            <% if (!loan.returned) { %>
-                                                                                <a href="/loans/return/<%= loan.id_loan %>"
-                                                                                    class="btn btn-sm btn-success"
-                                                                                    onclick="return confirm('¿Confirmar la devolución de este libro?')">
-                                                                                    <i class="fas fa-undo"></i> Devolver
-                                                                                </a>
-                                                                                <% } %>
+                                                                        <td>
+                                                                            <span class="badge badge-success">
+                                                                                Devuelto
+                                                                            </span>
                                                                         </td>
                                                                     </tr>
                                                                     <% }) %>
@@ -131,13 +114,13 @@
                                                                 <li
                                                                     class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
                                                                     <a class="page-link custom-green"
-                                                                        href="/loans?page=<%= currentPage - 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&laquo;</a>
+                                                                        href="/loans/returned?page=<%= currentPage - 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&laquo;</a>
                                                                 </li>
                                                                 <% for (let i=1; i <=totalPages; i++) { %>
                                                                     <li
                                                                         class="page-item <%= currentPage === i ? 'active' : '' %>">
                                                                         <a class="page-link custom-green"
-                                                                            href="/loans?page=<%= i %><%= searchTerm ? '&search=' + searchTerm : '' %>">
+                                                                            href="/loans/returned?page=<%= i %><%= searchTerm ? '&search=' + searchTerm : '' %>">
                                                                             <%= i %>
                                                                         </a>
                                                                     </li>
@@ -145,7 +128,7 @@
                                                                         <li
                                                                             class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
                                                                             <a class="page-link custom-green"
-                                                                                href="/loans?page=<%= currentPage + 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&raquo;</a>
+                                                                                href="/loans/returned?page=<%= currentPage + 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&raquo;</a>
                                                                         </li>
                                                             </ul>
                                                         </nav>
@@ -153,16 +136,15 @@
                                                             <% } else { %>
                                                                 <div class="text-center text-muted py-5">
                                                                     <% if (searchTerm) { %>
-                                                                        <p>No se encontraron préstamos con "<%=
+                                                                        <p>No se encontraron devoluciones con "<%=
                                                                                 searchTerm %>"</p>
-                                                                        <a href="/loans"
+                                                                        <a href="/loans/returned"
                                                                             class="btn btn-outline-secondary">Ver
-                                                                            todos</a>
+                                                                            todas</a>
                                                                         <% } else { %>
-                                                                            <p>No hay préstamos registrados.</p>
-                                                                            <a href="/loans/add"
-                                                                                class="btn btn-success">Registrar el
-                                                                                primero</a>
+                                                                            <p>No hay libros devueltos registrados.</p>
+                                                                            <a href="/loans"
+                                                                                class="btn btn-outline-primary">Ver préstamos activos</a>
                                                                             <% } %>
                                                                 </div>
                                                                 <% } %>
