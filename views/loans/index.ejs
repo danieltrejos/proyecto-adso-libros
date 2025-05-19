@@ -25,129 +25,163 @@
     <!-- SIDEBAR -->
     <%- include('../plantillas/sidebar') %>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <div class="flex flex-col flex-1 w-full min-h-screen">
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="flex flex-col flex-1 w-full min-h-screen">
 
-        <!-- HEADER -->
-        <%- include('../plantillas/header1') %>
+            <!-- HEADER -->
+            <%- include('../plantillas/header1') %>
 
-        <!-- MAIN -->
-        <main class="flex-1 min-h-[calc(100vh-100px)] p-4">
-            <div class="container-fluid">
-                <% if (messages.success) { %>
-                    <div class="alert alert-success"><%- messages.success %></div>
-                <% } %>
-                <% if (messages.error) { %>
-                    <div class="alert alert-danger"><%- messages.error %></div>
-                <% } %>
-
-                <div class="card shadow-sm">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0">📖 Listado de Préstamos</h4>
-                        <a href="/loans/add" class="btn btn-success">Añadir Préstamo</a>
-                    </div>
-
-                    <div class="card-body">
-                        <form method="GET" action="/loans" class="form-inline mb-3">
-                            <input type="text" name="search" value="<%= searchTerm %>"
-                                placeholder="Buscar por usuario o libro..."
-                                class="form-control mr-2">
-                            <button type="submit" class="btn btn-outline-success">Buscar</button>
-                            <% if (searchTerm) { %>
-                                <a href="/loans" class="btn btn-outline-secondary ml-2">Limpiar</a>
+                <!-- MAIN -->
+                <main class="flex-1 min-h-[calc(100vh-100px)] p-4">
+                    <div class="container-fluid">
+                        <% if (messages.success) { %>
+                            <div class="alert alert-success"><%- messages.success %></div>
                             <% } %>
-                        </form>
+                                <% if (messages.error) { %>
+                                    <div class="alert alert-danger"><%- messages.error %></div>
+                                    <% } %>
 
-                        <% if (data.length > 0) { %>
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 5%">#</th>
-                                            <th style="width: 15%">Usuario</th>
-                                            <th style="width: 20%">Libro</th>
-                                            <th style="width: 12%">Fecha Préstamo</th>
-                                            <th style="width: 12%">Fecha Devolución</th>
-                                            <th style="width: 10%">Estado</th>
-                                            <th style="width: 26%" class="text-center">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% data.forEach((loan, i) => { %>
-                                            <tr>
-                                                <td><%= ((currentPage - 1) * 5) + (i + 1) %></td>
-                                                <td><%= loan.user_name %></td>
-                                                <td><%= loan.book_name %></td>
-                                                <td><%= new Date(loan.loan_date).toLocaleDateString() %></td>
-                                                <td><%= loan.return_date ? new Date(loan.return_date).toLocaleDateString() : 'Pendiente' %></td>
-                                                <td>
-                                                    <span class="badge badge-<%= loan.status === 'RETURNED' ? 'success' : 'warning' %>">
-                                                        <%= loan.status === 'RETURNED' ? 'Devuelto' : 'Prestado' %>
-                                                    </span>
-                                                </td>
-                                                <td class="text-center">
-                                                    <a href="/loans/edit/<%= loan.id_loan %>" class="btn btn-sm btn-warning">
-                                                        <i class="fas fa-edit"></i> Editar
-                                                    </a>
-                                                    <% if (!loan.returned) { %>
-                                                        <a href="/loans/continue/<%= loan.id_loan %>" 
-                                                           class="btn btn-sm btn-info"
-                                                           onclick="return confirm('¿Desea continuar este préstamo por otro período?')">
-                                                            <i class="fas fa-sync"></i> Continuar
-                                                        </a>
-                                                        <a href="/loans/return/<%= loan.id_loan %>" 
-                                                           class="btn btn-sm btn-success"
-                                                           onclick="return confirm('¿Confirmar la devolución de este libro?')">
-                                                            <i class="fas fa-undo"></i> Devolver
-                                                        </a>
-                                                    <% } %>
-                                                </td>
-                                            </tr>
-                                        <% }) %>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        <div class="card shadow-sm">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h4 class="mb-0">📖 Listado de Préstamos</h4>
+                                                <a href="/loans/add" class="btn btn-success">Añadir Préstamo</a>
+                                            </div>
 
-                            <% if (totalPages > 1) { %>
-                                <nav class="mt-3">
-                                    <ul class="pagination justify-content-center">
-                                        <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-                                            <a class="page-link" href="/loans?page=<%= currentPage - 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&laquo;</a>
-                                        </li>
-                                        <% for (let i = 1; i <= totalPages; i++) { %>
-                                            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                                <a class="page-link" href="/loans?page=<%= i %><%= searchTerm ? '&search=' + searchTerm : '' %>"><%= i %></a>
-                                            </li>
-                                        <% } %>
-                                        <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-                                            <a class="page-link" href="/loans?page=<%= currentPage + 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&raquo;</a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            <% } %>
-                        <% } else { %>
-                            <div class="text-center text-muted py-5">
-                                <% if (searchTerm) { %>
-                                    <p>No se encontraron préstamos con "<%= searchTerm %>"</p>
-                                    <a href="/loans" class="btn btn-outline-secondary">Ver todos</a>
-                                <% } else { %>
-                                    <p>No hay préstamos registrados.</p>
-                                    <a href="/loans/add" class="btn btn-success">Registrar el primero</a>
-                                <% } %>
-                            </div>
-                        <% } %>
+                                            <div class="card-body">
+                                                <form method="GET" action="/loans" class="form-inline mb-3">
+                                                    <input type="text" name="search" value="<%= searchTerm %>"
+                                                        placeholder="Buscar por usuario o libro..."
+                                                        class="form-control mr-2">
+                                                    <button type="submit"
+                                                        class="btn btn-outline-success">Buscar</button>
+                                                    <% if (searchTerm) { %>
+                                                        <a href="/loans"
+                                                            class="btn btn-outline-secondary ml-2">Limpiar</a>
+                                                        <% } %>
+                                                </form>
+
+                                                <% if (data.length> 0) { %>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="width: 5%">#</th>
+                                                                    <th style="width: 15%">Usuario</th>
+                                                                    <th style="width: 20%">Libro</th>
+                                                                    <th style="width: 12%">Fecha Préstamo</th>
+                                                                    <th style="width: 12%">Fecha Devolución</th>
+                                                                    <th style="width: 10%">Estado</th>
+                                                                    <th style="width: 26%" class="text-center">Acciones
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% data.forEach((loan, i)=> { %>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <%= ((currentPage - 1) * 5) + (i + 1) %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= loan.user_name %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= loan.book_name %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= new
+                                                                                Date(loan.loan_date).toLocaleDateString()
+                                                                                %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= loan.return_date ? new
+                                                                                Date(loan.return_date).toLocaleDateString()
+                                                                                : 'Pendiente' %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span
+                                                                                class="badge badge-<%= loan.status === 'RETURNED' ? 'success' : 'warning' %>">
+                                                                                <%= loan.status==='RETURNED'
+                                                                                    ? 'Devuelto' : 'Prestado' %>
+                                                                            </span>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <a href="/loans/edit/<%= loan.id_loan %>"
+                                                                                class="btn btn-sm btn-warning">
+                                                                                <i class="fas fa-edit"></i> Editar
+                                                                            </a>
+                                                                            <% if (!loan.returned) { %>
+                                                                                <a href="/loans/continue/<%= loan.id_loan %>"
+                                                                                    class="btn btn-sm btn-info"
+                                                                                    onclick="return confirm('¿Desea continuar este préstamo por otro período?')">
+                                                                                    <i class="fas fa-sync"></i>
+                                                                                    Continuar
+                                                                                </a>
+                                                                                <a href="/loans/return/<%= loan.id_loan %>"
+                                                                                    class="btn btn-sm btn-success"
+                                                                                    onclick="return confirm('¿Confirmar la devolución de este libro?')">
+                                                                                    <i class="fas fa-undo"></i> Devolver
+                                                                                </a>
+                                                                                <% } %>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% }) %>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <% if (totalPages> 1) { %>
+                                                        <nav class="mt-3">
+                                                            <ul class="pagination justify-content-center">
+                                                                <li
+                                                                    class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                                                    <a class="page-link"
+                                                                        href="/loans?page=<%= currentPage - 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&laquo;</a>
+                                                                </li>
+                                                                <% for (let i=1; i <=totalPages; i++) { %>
+                                                                    <li
+                                                                        class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                                        <a class="page-link"
+                                                                            href="/loans?page=<%= i %><%= searchTerm ? '&search=' + searchTerm : '' %>">
+                                                                            <%= i %>
+                                                                        </a>
+                                                                    </li>
+                                                                    <% } %>
+                                                                        <li
+                                                                            class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                                                            <a class="page-link"
+                                                                                href="/loans?page=<%= currentPage + 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&raquo;</a>
+                                                                        </li>
+                                                            </ul>
+                                                        </nav>
+                                                        <% } %>
+                                                            <% } else { %>
+                                                                <div class="text-center text-muted py-5">
+                                                                    <% if (searchTerm) { %>
+                                                                        <p>No se encontraron préstamos con "<%=
+                                                                                searchTerm %>"</p>
+                                                                        <a href="/loans"
+                                                                            class="btn btn-outline-secondary">Ver
+                                                                            todos</a>
+                                                                        <% } else { %>
+                                                                            <p>No hay préstamos registrados.</p>
+                                                                            <a href="/loans/add"
+                                                                                class="btn btn-success">Registrar el
+                                                                                primero</a>
+                                                                            <% } %>
+                                                                </div>
+                                                                <% } %>
+                                            </div>
+                                        </div>
                     </div>
-                </div>
-            </div>
-        </main>
+                </main>
 
-        <!-- FOOTER -->
-        <%- include('../plantillas/footer') %>
+                <!-- FOOTER -->
+                <%- include('../plantillas/footer') %>
 
-    </div>
+        </div>
 
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+        <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
