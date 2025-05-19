@@ -25,51 +25,58 @@
                     <div class="container">
                         <% if (messages && messages.error) { %>
                             <div class="alert alert-danger"><%- messages.error %></div>
-                        <% } %>
+                            <% } %>
 
-                        <div class="card shadow-sm">
-                            <div class="card-header">
-                                <h4 class="mb-0">📚 Añadir Préstamo</h4>
-                            </div>
-                            <div class="card-body">
-                                <form action="/loans/add" method="POST">
-                                    <div class="form-group mb-3">
-                                        <label>Usuario:</label>
-                                        <select name="id_user" id="id_user" class="form-control" required>
-                                            <option value="">Seleccione un usuario</option>
-                                            <% users.forEach(function(user) { %>
-                                                <option value="<%= user.id_user %>"><%= user.name %> (<%= user.email %>)</option>
-                                            <% }) %>
-                                        </select>
+                                <div class="card shadow-sm">
+                                    <div class="card-header">
+                                        <h4 class="mb-0">📚 Añadir Préstamo</h4>
                                     </div>
-                                    <div class="form-group mb-3">
-                                        <label>Libro:</label>
-                                        <select name="id_book" id="id_book" class="form-control" required>
-                                            <option value="">Seleccione un libro</option>
-                                            <% books.forEach(function(book) { %>
-                                                <option value="<%= book.id_book %>"><%= book.name %> - <%= book.author_name %> (<%= book.publisher_name %>)</option>
-                                            <% }) %>
-                                        </select>
+                                    <div class="card-body">
+                                        <form action="/loans/add" method="POST">
+                                            <div class="form-group mb-3">
+                                                <label>Usuario:</label>
+                                                <select name="id_user" id="id_user" class="form-control" required>
+                                                    <option value="">Seleccione un usuario</option>
+                                                    <% users.forEach(function(user) { %>
+                                                        <option value="<%= user.id_user %>">
+                                                            <%= user.name %> (<%= user.email %>)
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label>Libro:</label>
+                                                <select name="id_book" id="id_book" class="form-control" required>
+                                                    <option value="">Seleccione un libro</option>
+                                                    <% books.forEach(function(book) { %>
+                                                        <option value="<%= book.id_book %>">
+                                                            <%= book.name %> - <%= book.author_name %> (<%=
+                                                                        book.publisher_name %>)
+                                                        </option>
+                                                        <% }) %>
+                                                </select>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label>Fecha de devolución:</label>
+                                                <input type="date" name="return_due" id="return_due"
+                                                    class="form-control" required
+                                                    min="<%= new Date().toISOString().split('T')[0] %>"
+                                                    max="<%= new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0] %>"
+                                                    value="<%= new Date(Date.now() + 7*24*60*60*1000).toISOString().split('T')[0] %>">
+                                                <small class="form-text text-muted">El período predeterminado de
+                                                    préstamo es de 7 días (máximo 30 días)</small>
+                                            </div>
+                                            <div class="mt-4">
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="fas fa-save"></i> Guardar
+                                                </button>
+                                                <a href="/loans" class="btn btn-secondary ms-2">
+                                                    <i class="fas fa-arrow-left"></i> Cancelar
+                                                </a>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class="form-group mb-3">
-                                        <label>Fecha de devolución:</label>
-                                        <input type="date" name="return_due" id="return_due" class="form-control" required
-                                            min="<%= new Date().toISOString().split('T')[0] %>"
-                                            max="<%= new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0] %>"
-                                            value="<%= new Date(Date.now() + 7*24*60*60*1000).toISOString().split('T')[0] %>">
-                                        <small class="form-text text-muted">El período predeterminado de préstamo es de 7 días (máximo 30 días)</small>
-                                    </div>
-                                    <div class="mt-4">
-                                        <button type="submit" class="btn btn-success">
-                                            <i class="fas fa-save"></i> Guardar
-                                        </button>
-                                        <a href="/loans" class="btn btn-secondary ms-2">
-                                            <i class="fas fa-arrow-left"></i> Cancelar
-                                        </a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                                </div>
                     </div>
                 </main>
 
