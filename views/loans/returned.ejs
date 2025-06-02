@@ -44,7 +44,7 @@
                                         <div class="card shadow-sm">
                                             <div class="card-header d-flex justify-content-between align-items-center">
                                                 <h4 class="mb-0">📚 Listado de Libros Devueltos</h4>
-                                                <a href="/loans" class="btn btn-outline-primary">
+                                                <a href="/loans" class="btn btn-success">
                                                     <i class="fas fa-arrow-left"></i> Ver Préstamos Activos
                                                 </a>
                                             </div>
@@ -89,13 +89,19 @@
                                                                             <%= loan.book_name %>
                                                                         </td>
                                                                         <td>
-                                                                            <%= new Date(loan.loan_date).toLocaleDateString() %>
+                                                                            <%= new
+                                                                                Date(loan.loan_date).toLocaleDateString()
+                                                                                %>
                                                                         </td>
                                                                         <td>
-                                                                            <%= new Date(loan.return_due).toLocaleDateString() %>
+                                                                            <%= new
+                                                                                Date(loan.return_due).toLocaleDateString()
+                                                                                %>
                                                                         </td>
                                                                         <td>
-                                                                            <%= new Date(loan.returned_at).toLocaleDateString() %>
+                                                                            <%= new
+                                                                                Date(loan.returned_at).toLocaleDateString()
+                                                                                %>
                                                                         </td>
                                                                         <td>
                                                                             <span class="badge badge-success">
@@ -144,7 +150,8 @@
                                                                         <% } else { %>
                                                                             <p>No hay libros devueltos registrados.</p>
                                                                             <a href="/loans"
-                                                                                class="btn btn-outline-primary">Ver préstamos activos</a>
+                                                                                class="btn btn-outline-primary">Ver
+                                                                                préstamos activos</a>
                                                                             <% } %>
                                                                 </div>
                                                                 <% } %>
