@@ -8,9 +8,18 @@ router.get("/", (req, res) => {
   const limit = 5;
   const offset = (page - 1) * limit;
   const search = req.query.search || "";
-
-  let query = `SELECT * FROM users WHERE (name LIKE ? OR email LIKE ?) AND state = 1 LIMIT ? OFFSET ?`;
-  let countQuery = `SELECT COUNT(*) AS total FROM users WHERE (name LIKE ? OR email LIKE ?) AND state = 1`;
+  let query = `
+    SELECT u.*, r.name as role_name 
+    FROM users u 
+    INNER JOIN roles r ON u.id_role = r.id_role 
+    WHERE (u.name LIKE ? OR u.email LIKE ?) AND u.state = 1 
+    LIMIT ? OFFSET ?`;
+  
+  let countQuery = `
+    SELECT COUNT(*) AS total 
+    FROM users u 
+    INNER JOIN roles r ON u.id_role = r.id_role 
+    WHERE (u.name LIKE ? OR u.email LIKE ?) AND u.state = 1`;
   const searchPattern = `%${search}%`;
 
   dbConn.query(countQuery, [searchPattern, searchPattern], (err, countResult) => {
@@ -49,25 +58,45 @@ router.get("/", (req, res) => {
 
 // Página de agregar
 router.get("/add", (req, res) => {
-  res.render("users/add", {
-    name: "",
-    email: "",
-    password: "",
-    role: "",
-    messages: {},
+  // Cargar roles para el selector
+  dbConn.query("SELECT * FROM roles WHERE state = 1", (err, roles) => {
+    if (err) {
+      return res.render("users/add", {
+        name: "",
+        email: "",
+        password: "",
+        id_role: "",
+        roles: [],
+        messages: { error: err.message },
+      });
+    }
+
+    res.render("users/add", {
+      name: "",
+      email: "",
+      password: "",
+      id_role: "",
+      roles,
+      messages: {},
+    });
   });
 });
 
 // Guardar nuevo usuario
 router.post("/add", (req, res) => {
-  const { name, email, password, role } = req.body;
-  if (!name || !email || !password || !role) {
-    return res.render("users/add", {
-      name,
-      email,
-      password,
-      role,
-      messages: { error: "Todos los campos son obligatorios" },
+  const { name, email, password, id_role } = req.body;
+  
+  if (!name || !email || !password || !id_role) {
+    // Recargar roles en caso de error
+    return dbConn.query("SELECT * FROM roles WHERE state = 1", (err, roles) => {
+      res.render("users/add", {
+        name,
+        email,
+        password: "",
+        id_role,
+        roles: roles || [],
+        messages: { error: "Todos los campos son obligatorios" },
+      });
     });
   }
 
@@ -75,16 +104,21 @@ router.post("/add", (req, res) => {
     name,
     email,
     password,
-    role,
+    id_role,
     state: 1,
   };
 
   dbConn.query("INSERT INTO users SET ?", userData, (err) => {
     if (err) {
-      res.render("users/add", {
-        ...userData,
-        password: "",
-        messages: { error: err.message },
+      return dbConn.query("SELECT * FROM roles WHERE state = 1", (err, roles) => {
+        res.render("users/add", {
+          name,
+          email,
+          password: "",
+          id_role,
+          roles: roles || [],
+          messages: { error: err.message },
+        });
       });
     } else {
       req.flash("success", "Usuario agregado exitosamente");
@@ -95,42 +129,54 @@ router.post("/add", (req, res) => {
 
 // Editar
 router.get("/edit/:id", (req, res) => {
-  dbConn.query(
-    "SELECT * FROM users WHERE id_user = ? AND state = 1",
-    [req.params.id],
-    (err, rows) => {
-      if (err || rows.length === 0) {
-        req.flash("error", "Usuario no encontrado");
+  const userQuery = "SELECT * FROM users WHERE id_user = ? AND state = 1";
+  const rolesQuery = "SELECT * FROM roles WHERE state = 1";
+
+  dbConn.query(userQuery, [req.params.id], (err, users) => {
+    if (err || users.length === 0) {
+      req.flash("error", "Usuario no encontrado");
+      return res.redirect("/users");
+    }
+
+    dbConn.query(rolesQuery, (err, roles) => {
+      if (err) {
+        req.flash("error", "Error al cargar roles");
         return res.redirect("/users");
       }
+
       res.render("users/edit", {
-        id_user: rows[0].id_user,
-        name: rows[0].name,
-        email: rows[0].email,
-        role: rows[0].role,
+        id_user: users[0].id_user,
+        name: users[0].name,
+        email: users[0].email,
+        id_role: users[0].id_role,
+        roles,
         messages: {},
       });
-    }
-  );
+    });
+  });
 });
 
 // Actualizar
 router.post("/update/:id", (req, res) => {
-  const { name, email, password, role } = req.body;
-  if (!name || !email || !role) {
-    return res.render("users/edit", {
-      id_user: req.params.id,
-      name,
-      email,
-      role,
-      messages: { error: "Nombre, email y rol son obligatorios" },
+  const { name, email, password, id_role } = req.body;
+  
+  if (!name || !email || !id_role) {
+    return dbConn.query("SELECT * FROM roles WHERE state = 1", (err, roles) => {
+      res.render("users/edit", {
+        id_user: req.params.id,
+        name,
+        email,
+        id_role,
+        roles: roles || [],
+        messages: { error: "Nombre, email y rol son obligatorios" },
+      });
     });
   }
 
   const userData = {
     name,
     email,
-    role,
+    id_role,
   };
 
   // Solo actualizar la contraseña si se proporcionó una nueva
@@ -143,10 +189,15 @@ router.post("/update/:id", (req, res) => {
     [userData, req.params.id],
     (err) => {
       if (err) {
-        res.render("users/edit", {
-          id_user: req.params.id,
-          ...userData,
-          messages: { error: err.message },
+        return dbConn.query("SELECT * FROM roles WHERE state = 1", (err, roles) => {
+          res.render("users/edit", {
+            id_user: req.params.id,
+            name,
+            email,
+            id_role,
+            roles: roles || [],
+            messages: { error: err.message },
+          });
         });
       } else {
         req.flash("success", "Usuario actualizado correctamente");

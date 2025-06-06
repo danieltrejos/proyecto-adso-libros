@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - BiblioApp</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-header {
+            background: linear-gradient(45deg, #059669, #047857);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .login-body {
+            padding: 2rem;
+        }
+
+        .btn-login {
+            background: linear-gradient(45deg, #059669, #047857);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            width: 100%;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(5, 150, 105, 0.3);
+            color: white;
+        }
+
+        .form-control {
+            border-radius: 25px;
+            border: 2px solid #e5e7eb;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #059669;
+            box-shadow: 0 0 0 0.2rem rgba(5, 150, 105, 0.25);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-card">
+        <div class="login-header">
+            <h3 class="mb-0">📚 BiblioApp</h3>
+            <p class="mb-0 mt-2">Iniciar Sesión</p>
+        </div>
+        <div class="login-body">
+            <% if (messages && messages.error) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <%= messages.error %>
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span>&times;</span>
+                        </button>
+                </div>
+                <% } %>
+
+                    <form action="/auth/login" method="POST">
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" class="form-control" value="<%= email %>"
+                                required placeholder="Ingresa tu email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Contraseña:</label>
+                            <input type="password" id="password" name="password" class="form-control" required
+                                placeholder="Ingresa tu contraseña">
+                        </div>
+
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-login">
+                                <i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="/" class="text-muted">
+                            <i class="fas fa-arrow-left"></i> Volver al inicio
+                        </a>
+                    </div>
+
+                    <hr class="mt-4">
+                    <div class="text-center">
+                        <small class="text-muted">
+                            <strong>Usuarios de prueba:</strong><br>
+                            Admin: admin@prueba.com / admin123<br>
+                            Cliente: cliente@prueba.com / cliente123
+                        </small>
+                    </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/your-code.js"></script>
+</body>
+
+</html>

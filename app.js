@@ -9,7 +9,11 @@ const session = require("express-session");
 const mysql = require("mysql");
 const connection = require("./lib/db");
 
+// Importar middleware de autenticación
+const { requireAuth, requireAdminOrLibrarian, requireAdmin } = require("./middleware/auth");
+
 const indexRouter = require("./routes/index");
+const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
 const booksRouter = require("./routes/books");
 const authorsRouter = require("./routes/authors");
@@ -32,7 +36,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
-    cookie: { maxAge: 60000 },
+    cookie: { maxAge: 60000 * 60 }, // 1 hora
     store: new session.MemoryStore(),
     saveUninitialized: true,
     resave: "true",
@@ -42,14 +46,24 @@ app.use(
 
 app.use(flash());
 
+// Middleware para hacer disponible la información del usuario en todas las vistas
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
+
+// Rutas públicas
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/books", booksRouter);
-app.use("/authors", authorsRouter);
-app.use("/categories", categoriesRouter);
-app.use("/publishers", publishersRouter);
-app.use("/loans", loansRouter);
-app.use("/dashboard", dashboardRouter);
+app.use("/auth", authRouter);
+
+// Rutas protegidas
+app.use("/dashboard", requireAuth, dashboardRouter);
+app.use("/books", requireAuth, booksRouter);
+app.use("/authors", requireAuth, requireAdminOrLibrarian, authorsRouter);
+app.use("/categories", requireAuth, requireAdminOrLibrarian, categoriesRouter);
+app.use("/publishers", requireAuth, requireAdminOrLibrarian, publishersRouter);
+app.use("/loans", requireAuth, loansRouter);
+app.use("/users", requireAuth, requireAdmin, usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

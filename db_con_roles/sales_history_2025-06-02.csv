@@ -1,0 +1,6 @@
+ID,Date,Customer,User,Items,Total,Payment Method
+1,15/4/2023, 20:30:00,John Doe,Bartender 1,2x Hoppy IPA, 1x Dark Stout,$24.47,Credit Card
+2,15/4/2023, 21:15:00,Jane Smith,Bartender 2,4x Golden Lager,$27.96,Cash
+3,16/4/2023, 19:45:00,Robert Johnson,Bartender 1,2x Amber Ale, 1x Sour Cherry,$23.97,Credit Card
+4,16/4/2023, 22:30:00,Maria Rodriguez,Bartender 2,2x Wheat Beer, 1x Hoppy IPA,$22.57,Cash
+5,17/4/2023, 20:15:00,David Wilson,Bartender 1,3x Belgian Tripel,$29.97,Credit Card

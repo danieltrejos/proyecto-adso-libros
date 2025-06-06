@@ -1,0 +1,5 @@
+ID,Date,Customer,User,Items,Total,Payment Method
+4,2/6/2025, 18:08:02,María García,Carlos Rodríguez,3x Costeña, 4x Heineken,$30000.00,Cash
+3,2/6/2025, 17:03:50,Juan Pérez,Carlos Rodríguez,4x Aguila Light,$12000.00,Cash
+2,2/6/2025, 17:01:32,Juan Pérez,Carlos Rodríguez,1x Heineken,$4500.00,Cash
+1,30/5/2025, 12:32:37,Juan Pérez,Juan Pérez,2x Malta, 1x Costeña,$23.97,Cash

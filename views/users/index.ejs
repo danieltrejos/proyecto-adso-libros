@@ -72,11 +72,9 @@
                                                                     </td>
                                                                     <td>
                                                                         <%= user.email %>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span
-                                                                            class="badge badge-<%= user.role === 'ADMIN' ? 'primary' : 'secondary' %>">
-                                                                            <%= user.role %>
+                                                                    </td>                                                                    <td>
+                                                                        <span class="badge badge-<%= user.role_name === 'ADMIN' ? 'primary' : (user.role_name === 'LIBRARIAN' ? 'info' : 'secondary') %>">
+                                                                            <%= user.role_name %>
                                                                         </span>
                                                                     </td>
                                                                     <td class="text-center">
