@@ -45,14 +45,17 @@
                                         <div class="card">
                                             <div class="card-header d-flex justify-content-between align-items-center">
                                                 <h5 class="mb-0">📚 Listado de libros</h5>
-                                                <div>
-                                                    <a href="/books/restore" class="btn btn-outline-success mr-2">
-                                                        <i class="fas fa-undo"></i> Recuperar
-                                                    </a>
-                                                    <a href="/books/add" class="btn btn-success">
-                                                        <i class="fas fa-plus"></i> Añadir Libros
-                                                    </a>
-                                                </div>
+                                                <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN'
+                                                    )) { %>
+                                                    <div>
+                                                        <a href="/books/restore" class="btn btn-outline-success mr-2">
+                                                            <i class="fas fa-undo"></i> Recuperar
+                                                        </a>
+                                                        <a href="/books/add" class="btn btn-success">
+                                                            <i class="fas fa-plus"></i> Añadir Libros
+                                                        </a>
+                                                    </div>
+                                                    <% } %>
                                             </div>
 
                                             <div class="card-body">
@@ -81,7 +84,10 @@
                                                                     <th>Páginas</th>
                                                                     <th>Categoría</th>
                                                                     <th>Editorial</th>
-                                                                    <th class="text-center">Acciones</th>
+                                                                    <% if (user && (user.role_name==='ADMIN' ||
+                                                                        user.role_name==='LIBRARIAN' )) { %>
+                                                                        <th class="text-center">Acciones</th>
+                                                                        <% } %>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -111,17 +117,21 @@
                                                                         <td>
                                                                             <%= book.publisher_name %>
                                                                         </td>
-                                                                        <td class="text-center">
-                                                                            <a href="/books/edit/<%= book.id_book %>"
-                                                                                class="btn btn-sm btn-warning">
-                                                                                <i class="fas fa-edit"></i> Editar
-                                                                            </a>
-                                                                            <a href="/books/delete/<%= book.id_book %>"
-                                                                                onclick="return confirm('¿Está seguro que desea eliminar este libro?')"
-                                                                                class="btn btn-sm btn-danger">
-                                                                                <i class="fas fa-trash"></i> Eliminar
-                                                                            </a>
-                                                                        </td>
+                                                                        <% if (user && (user.role_name==='ADMIN' ||
+                                                                            user.role_name==='LIBRARIAN' )) { %>
+                                                                            <td class="text-center">
+                                                                                <a href="/books/edit/<%= book.id_book %>"
+                                                                                    class="btn btn-sm btn-warning">
+                                                                                    <i class="fas fa-edit"></i> Editar
+                                                                                </a>
+                                                                                <a href="/books/delete/<%= book.id_book %>"
+                                                                                    onclick="return confirm('¿Está seguro que desea eliminar este libro?')"
+                                                                                    class="btn btn-sm btn-danger">
+                                                                                    <i class="fas fa-trash"></i>
+                                                                                    Eliminar
+                                                                                </a>
+                                                                            </td>
+                                                                            <% } %>
                                                                     </tr>
                                                                     <% }) %>
                                                             </tbody>
@@ -163,10 +173,13 @@
                                                                             todos</a>
                                                                         <% } else { %>
                                                                             <p>No hay libros registrados.</p>
-                                                                            <a href="/books/add"
-                                                                                class="btn btn-success">Agregar el
-                                                                                primero</a>
-                                                                            <% } %>
+                                                                            <% if (user && (user.role_name==='ADMIN' ||
+                                                                                user.role_name==='LIBRARIAN' )) { %>
+                                                                                <a href="/books/add"
+                                                                                    class="btn btn-success">Agregar el
+                                                                                    primero</a>
+                                                                                <% } %>
+                                                                                    <% } %>
                                                                 </div>
                                                                 <% } %>
                                             </div>

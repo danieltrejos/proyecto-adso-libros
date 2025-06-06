@@ -38,5 +38,5 @@ module.exports = {
   requireAuth,
   requireRole,
   requireAdmin,
-  requireAdminOrLibrarian
+  requireAdminOrLibrarian,
 };

@@ -77,7 +77,13 @@
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div>
                                 <h1 class="h3 mb-2">Panel de Control</h1>
-                                <p class="text-muted">Bienvenido al panel de administración de BiblioApp</p>
+                                <p class="text-muted">
+                                    <% if (user && user.role_name==='CLIENT' ) { %>
+                                        Bienvenido al panel de consulta de BiblioApp
+                                        <% } else { %>
+                                            Bienvenido al panel de administración de BiblioApp
+                                            <% } %>
+                                </p>
                             </div>
                         </div>
 
@@ -94,12 +100,14 @@
                                     <p class="text-muted mb-4">Administra el catálogo de libros, añade nuevos títulos y
                                         actualiza la información existente.</p>
                                     <div class="d-flex gap-2">
-                                        <a href="/books/add" class="btn-action">
-                                            <i class="fas fa-plus"></i> Añadir Libro
-                                        </a>
-                                        <a href="/books" class="btn-action btn-ver-listado">
-                                            <i class="fas fa-list"></i> Ver Listado
-                                        </a>
+                                        <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN' )) { %>
+                                            <a href="/books/add" class="btn-action">
+                                                <i class="fas fa-plus"></i> Añadir Libro
+                                            </a>
+                                            <% } %>
+                                                <a href="/books" class="btn-action btn-ver-listado">
+                                                    <i class="fas fa-list"></i> Ver Listado
+                                                </a>
                                     </div>
                                 </div>
                             </div>
@@ -116,105 +124,110 @@
                                     <p class="text-muted mb-4">Controla los préstamos activos y el historial de
                                         devoluciones.</p>
                                     <div class="d-flex gap-2">
-                                        <a href="/loans/add" class="btn-action">
-                                            <i class="fas fa-plus"></i> Añadir Préstamo
-                                        </a>
-                                        <a href="/loans" class="btn-action btn-ver-listado">
-                                            <i class="fas fa-list"></i> Ver Listado
-                                        </a>
+                                        <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN' )) { %>
+                                            <a href="/loans/add" class="btn-action">
+                                                <i class="fas fa-plus"></i> Añadir Préstamo
+                                            </a>
+                                            <% } %>
+                                                <a href="/loans" class="btn-action btn-ver-listado">
+                                                    <i class="fas fa-list"></i> Ver Listado
+                                                </a>
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- Autores -->
-                            <div class="col-12 col-md-6 col-lg-4">
-                                <div class="dashboard-card bg-white rounded-lg p-4">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="dashboard-icon rounded-circle p-3 me-3">
-                                            <i class="fas fa-user-edit h5 mb-0"></i>
+                            </div> <!-- Autores -->
+                            <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN' )) { %>
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="dashboard-card bg-white rounded-lg p-4">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="dashboard-icon rounded-circle p-3 me-3">
+                                                <i class="fas fa-user-edit h5 mb-0"></i>
+                                            </div>
+                                            <h3 class="h5 mb-0">Gestión de Autores</h3>
                                         </div>
-                                        <h3 class="h5 mb-0">Gestión de Autores</h3>
-                                    </div>
-                                    <p class="text-muted mb-4">Administra la información de los autores y sus obras en
-                                        el sistema.</p>
-                                    <div class="d-flex gap-2">
-                                        <a href="/authors/add" class="btn-action">
-                                            <i class="fas fa-plus"></i> Añadir Autor
-                                        </a>
-                                        <a href="/authors" class="btn-action btn-ver-listado">
-                                            <i class="fas fa-list"></i> Ver Listado
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Categorías -->
-                            <div class="col-12 col-md-6 col-lg-4">
-                                <div class="dashboard-card bg-white rounded-lg p-4">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="dashboard-icon rounded-circle p-3 me-3">
-                                            <i class="fas fa-tags h5 mb-0"></i>
+                                        <p class="text-muted mb-4">Administra la información de los autores y sus obras
+                                            en
+                                            el sistema.</p>
+                                        <div class="d-flex gap-2">
+                                            <a href="/authors/add" class="btn-action">
+                                                <i class="fas fa-plus"></i> Añadir Autor
+                                            </a>
+                                            <a href="/authors" class="btn-action btn-ver-listado">
+                                                <i class="fas fa-list"></i> Ver Listado
+                                            </a>
                                         </div>
-                                        <h3 class="h5 mb-0">Gestión de Categorías</h3>
-                                    </div>
-                                    <p class="text-muted mb-4">Organiza los libros por géneros y categorías para una
-                                        mejor clasificación.</p>
-                                    <div class="d-flex gap-2">
-                                        <a href="/categories/add" class="btn-action">
-                                            <i class="fas fa-plus"></i> Añadir Categoría
-                                        </a>
-                                        <a href="/categories" class="btn-action btn-ver-listado">
-                                            <i class="fas fa-list"></i> Ver Listado
-                                        </a>
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- Editoriales -->
-                            <div class="col-12 col-md-6 col-lg-4">
-                                <div class="dashboard-card bg-white rounded-lg p-4">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="dashboard-icon rounded-circle p-3 me-3">
-                                            <i class="fas fa-building h5 mb-0"></i>
+                                <% } %> <!-- Categorías -->
+                                    <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN' )) { %>
+                                        <div class="col-12 col-md-6 col-lg-4">
+                                            <div class="dashboard-card bg-white rounded-lg p-4">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <div class="dashboard-icon rounded-circle p-3 me-3">
+                                                        <i class="fas fa-tags h5 mb-0"></i>
+                                                    </div>
+                                                    <h3 class="h5 mb-0">Gestión de Categorías</h3>
+                                                </div>
+                                                <p class="text-muted mb-4">Organiza los libros por géneros y categorías
+                                                    para una
+                                                    mejor clasificación.</p>
+                                                <div class="d-flex gap-2">
+                                                    <a href="/categories/add" class="btn-action">
+                                                        <i class="fas fa-plus"></i> Añadir Categoría
+                                                    </a>
+                                                    <a href="/categories" class="btn-action btn-ver-listado">
+                                                        <i class="fas fa-list"></i> Ver Listado
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <h3 class="h5 mb-0">Gestión de Editoriales</h3>
-                                    </div>
-                                    <p class="text-muted mb-4">Administra la información de las editoriales y sus
-                                        publicaciones.</p>
-                                    <div class="d-flex gap-2">
-                                        <a href="/publishers/add" class="btn-action">
-                                            <i class="fas fa-plus"></i> Añadir Editorial
-                                        </a>
-                                        <a href="/publishers" class="btn-action btn-ver-listado">
-                                            <i class="fas fa-list"></i> Ver Listado
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-
-
-
-                            <!-- Usuarios -->
-                            <div class="col-12 col-md-6 col-lg-4">
-                                <div class="dashboard-card bg-white rounded-lg p-4">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="dashboard-icon rounded-circle p-3 me-3">
-                                            <i class="fas fa-users h5 mb-0"></i>
-                                        </div>
-                                        <h3 class="h5 mb-0">Gestión de Usuarios</h3>
-                                    </div>
-                                    <p class="text-muted mb-4">Añade y administra los usuarios del sistema y sus roles.
-                                    </p>
-                                    <div class="d-flex gap-2">
-                                        <a href="/users/add" class="btn-action">
-                                            <i class="fas fa-plus"></i> Añadir Usuario
-                                        </a>
-                                        <a href="/users" class="btn-action btn-ver-listado">
-                                            <i class="fas fa-list"></i> Ver Listado
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                                        <% } %> <!-- Editoriales -->
+                                            <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN' ))
+                                                { %>
+                                                <div class="col-12 col-md-6 col-lg-4">
+                                                    <div class="dashboard-card bg-white rounded-lg p-4">
+                                                        <div class="d-flex align-items-center mb-3">
+                                                            <div class="dashboard-icon rounded-circle p-3 me-3">
+                                                                <i class="fas fa-building h5 mb-0"></i>
+                                                            </div>
+                                                            <h3 class="h5 mb-0">Gestión de Editoriales</h3>
+                                                        </div>
+                                                        <p class="text-muted mb-4">Administra la información de las
+                                                            editoriales y sus
+                                                            publicaciones.</p>
+                                                        <div class="d-flex gap-2">
+                                                            <a href="/publishers/add" class="btn-action">
+                                                                <i class="fas fa-plus"></i> Añadir Editorial
+                                                            </a>
+                                                            <a href="/publishers" class="btn-action btn-ver-listado">
+                                                                <i class="fas fa-list"></i> Ver Listado
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } %> <!-- Usuarios -->
+                                                    <% if (user && user.role_name==='ADMIN' ) { %>
+                                                        <div class="col-12 col-md-6 col-lg-4">
+                                                            <div class="dashboard-card bg-white rounded-lg p-4">
+                                                                <div class="d-flex align-items-center mb-3">
+                                                                    <div class="dashboard-icon rounded-circle p-3 me-3">
+                                                                        <i class="fas fa-users h5 mb-0"></i>
+                                                                    </div>
+                                                                    <h3 class="h5 mb-0">Gestión de Usuarios</h3>
+                                                                </div>
+                                                                <p class="text-muted mb-4">Añade y administra los
+                                                                    usuarios del sistema y sus roles.
+                                                                </p>
+                                                                <div class="d-flex gap-2">
+                                                                    <a href="/users/add" class="btn-action">
+                                                                        <i class="fas fa-plus"></i> Añadir Usuario
+                                                                    </a>
+                                                                    <a href="/users" class="btn-action btn-ver-listado">
+                                                                        <i class="fas fa-list"></i> Ver Listado
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <% } %>
                         </div>
                     </div>
                 </main>

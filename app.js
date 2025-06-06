@@ -10,7 +10,11 @@ const mysql = require("mysql");
 const connection = require("./lib/db");
 
 // Importar middleware de autenticación
-const { requireAuth, requireAdminOrLibrarian, requireAdmin } = require("./middleware/auth");
+const {
+  requireAuth,
+  requireAdminOrLibrarian,
+  requireAdmin,
+} = require("./middleware/auth");
 
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
