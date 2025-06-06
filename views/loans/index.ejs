@@ -6,6 +6,7 @@
     <title>Listado de Préstamos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
     <style>
         html,
@@ -75,20 +76,20 @@
                                                                 <tr>
                                                                     <th style="width: 5%">#</th>
                                                                     <th style="width: 15%">Usuario</th>
-                                                                    <th style="width: 20%">Libro</th>
+                                                                    <th style="width: 18%">Libro</th>
+                                                                    <th style="width: 8%">Stock</th>
                                                                     <th style="width: 12%">Fecha Préstamo</th>
                                                                     <th style="width: 12%">Fecha Devolución</th>
-                                                                    <th style="width: 10%">Estado</th>
+                                                                    <th style="width: 8%">Estado</th>
                                                                     <% if (user && (user.role_name==='ADMIN' ||
                                                                         user.role_name==='LIBRARIAN' )) { %>
-                                                                        <th style="width: 26%" class="text-center">
+                                                                        <th style="width: 22%" class="text-center">
                                                                             Acciones</th>
                                                                         <% } %>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <% data.forEach((loan, i)=> { %>
-                                                                    <tr>
+                                                                <% data.forEach((loan, i)=> { %> <tr>
                                                                         <td>
                                                                             <%= ((currentPage - 1) * 5) + (i + 1) %>
                                                                         </td>
@@ -97,6 +98,23 @@
                                                                         </td>
                                                                         <td>
                                                                             <%= loan.book_name %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <% let stockBadgeClass='' ; if
+                                                                                (loan.book_stock> 10) {
+                                                                                stockBadgeClass = 'badge-success';
+                                                                                } else if (loan.book_stock >= 6) {
+                                                                                stockBadgeClass = 'badge-warning';
+                                                                                } else if (loan.book_stock >= 1) {
+                                                                                stockBadgeClass = 'badge-danger';
+                                                                                } else {
+                                                                                stockBadgeClass = 'badge-dark';
+                                                                                }
+                                                                                %>
+                                                                                <span
+                                                                                    class="badge <%= stockBadgeClass %>">
+                                                                                    <%= loan.book_stock %>
+                                                                                </span>
                                                                         </td>
                                                                         <td>
                                                                             <%= new
@@ -119,15 +137,22 @@
                                                                             user.role_name==='LIBRARIAN' )) { %>
                                                                             <td class="text-center">
                                                                                 <a href="/loans/edit/<%= loan.id_loan %>"
-                                                                                    class="btn btn-sm btn-warning">
-                                                                                    <i class="fas fa-edit"></i> Editar
+                                                                                    class="btn btn-sm btn-warning me-1"
+                                                                                    title="Editar préstamo">
+                                                                                    <i class="fas fa-edit"></i>
                                                                                 </a>
                                                                                 <% if (!loan.returned) { %>
+                                                                                    <a href="/loans/continue/<%= loan.id_loan %>"
+                                                                                        class="btn btn-sm btn-info me-1"
+                                                                                        onclick="return confirm('Extender este préstamo por 15 días más?')"
+                                                                                        title="Extender préstamo">
+                                                                                        <i class="fas fa-plus"></i>
+                                                                                    </a>
                                                                                     <a href="/loans/return/<%= loan.id_loan %>"
                                                                                         class="btn btn-sm btn-success"
-                                                                                        onclick="return confirm('¿Confirmar la devolución de este libro?')">
+                                                                                        onclick="return confirm('¿Confirmar la devolución de este libro?')"
+                                                                                        title="Devolver libro">
                                                                                         <i class="fas fa-undo"></i>
-                                                                                        Devolver
                                                                                     </a>
                                                                                     <% } %>
                                                                             </td>

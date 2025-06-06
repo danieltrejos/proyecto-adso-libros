@@ -6,6 +6,7 @@
     <title>Listado de libros</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
     <style>
         html,
@@ -120,22 +121,28 @@
                                                                         </td>
                                                                         <td>
                                                                             <% if (book.stock> 10) { %>
-                                                                                <span class="badge badge-success">
+                                                                                <span
+                                                                                    class="badge badge-success d-inline-block text-center"
+                                                                                    style="min-width: 100px; background-color: #28a745;">
                                                                                     <%= book.stock %> disponibles
                                                                                 </span>
                                                                                 <% } else if (book.stock> 5) { %>
-                                                                                    <span class="badge badge-warning">
+                                                                                    <span
+                                                                                        class="badge badge-warning d-inline-block text-center"
+                                                                                        style="min-width: 100px;">
                                                                                         <%= book.stock %> disponibles
                                                                                     </span>
                                                                                     <% } else if (book.stock> 0) { %>
                                                                                         <span
-                                                                                            class="badge badge-danger">
+                                                                                            class="badge badge-danger d-inline-block text-center"
+                                                                                            style="min-width: 100px;">
                                                                                             <%= book.stock %>
                                                                                                 disponibles
                                                                                         </span>
                                                                                         <% } else { %>
                                                                                             <span
-                                                                                                class="badge badge-dark">
+                                                                                                class="badge badge-dark d-inline-block text-center"
+                                                                                                style="min-width: 100px;">
                                                                                                 Sin stock
                                                                                             </span>
                                                                                             <% } %>
@@ -144,14 +151,15 @@
                                                                             user.role_name==='LIBRARIAN' )) { %>
                                                                             <td class="text-center">
                                                                                 <a href="/books/edit/<%= book.id_book %>"
-                                                                                    class="btn btn-sm btn-warning">
-                                                                                    <i class="fas fa-edit"></i> Editar
-                                                                                </a>
-                                                                                <a href="/books/delete/<%= book.id_book %>"
-                                                                                    onclick="return confirm('¿Está seguro que desea eliminar este libro?')"
-                                                                                    class="btn btn-sm btn-danger">
-                                                                                    <i class="fas fa-trash"></i>
-                                                                                    Eliminar
+                                                                                    class="btn btn-sm btn-warning me-1"
+                                                                                    title="Editar libro">
+                                                                                    <i class="fas fa-edit"></i>
+                                                                                </a> <a
+                                                                                    href="/books/delete/<%= book.id_book %>"
+                                                                                    onclick="return confirm('¿Está seguro que desea deshabilitar este libro?')"
+                                                                                    class="btn btn-sm btn-secondary"
+                                                                                    title="Deshabilitar libro">
+                                                                                    <i class="fas fa-eye-slash"></i>
                                                                                 </a>
                                                                             </td>
                                                                             <% } %>
@@ -211,13 +219,10 @@
                     </div>
                 </main>
 
-                <!-- FOOTER -->
-                <%- include('../plantillas/footer') %>
+                <!-- FOOTER --> <%- include('../plantillas/footer') %>
 
         </div>
 
-        <!-- Font Awesome -->
-        <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
