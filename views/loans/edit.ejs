@@ -32,35 +32,58 @@
                                         <h4 class="mb-0">✏️ Editar Préstamo</h4>
                                     </div>
                                     <div class="card-body">
-                                        <form action="/loans/update/<%= id_loan %>" method="POST">
-                                            <div class="form-group">
+                                        <form action="/loans/update/<%= id_loan %>" method="POST">                                            <div class="form-group">
                                                 <label>Usuario:</label>
                                                 <select name="id_user" class="form-control" required <%= returned ? 'disabled' : '' %>>
                                                     <option value="">Seleccione un usuario</option>
                                                     <% users.forEach(function(user) { %>
-                                                        <option value="<%= user.id_user %>" <%= id_user==user.id_user ? 'selected' : '' %>>
+                                                        <option value="<%= user.id_user %>" <%= id_user == user.id_user ? 'selected' : '' %>>
                                                             <%= user.name %> (<%= user.email %>)
                                                         </option>
                                                     <% }); %>
                                                 </select>
-                                            </div>
-                                            <div class="form-group">
+                                            </div><div class="form-group">
                                                 <label>Libro:</label>
                                                 <select name="id_book" class="form-control" required <%= returned ? 'disabled' : '' %>>
                                                     <option value="">Seleccione un libro</option>
                                                     <% books.forEach(function(book) { %>
-                                                        <option value="<%= book.id_book %>" <%= id_book==book.id_book ? 'selected' : '' %>>
-                                                            <%= book.name %> - <%= book.author_name %> (<%= book.publisher_name %>)
+                                                        <% 
+                                                            let stockBadgeClass = '';
+                                                            let stockText = '';
+                                                            let isDisabled = false;
+                                                            
+                                                            if (book.stock > 10) {
+                                                                stockBadgeClass = 'success';
+                                                                stockText = `Stock: ${book.stock}`;
+                                                            } else if (book.stock >= 6) {
+                                                                stockBadgeClass = 'warning';
+                                                                stockText = `Stock: ${book.stock}`;
+                                                            } else if (book.stock >= 1) {
+                                                                stockBadgeClass = 'danger';
+                                                                stockText = `¡Pocas unidades! Stock: ${book.stock}`;
+                                                            } else {
+                                                                stockBadgeClass = 'dark';
+                                                                stockText = 'Sin stock';
+                                                                isDisabled = book.id_book != id_book;
+                                                            }
+                                                        %>
+                                                        <option value="<%= book.id_book %>" 
+                                                                <%= id_book == book.id_book ? 'selected' : '' %>
+                                                                <%= isDisabled ? 'disabled' : '' %>>
+                                                            <%= book.name %> - <%= book.author_name %> (<%= book.publisher_name %>) - <%= stockText %>
                                                         </option>
                                                     <% }); %>
                                                 </select>
+                                                <small class="form-text text-muted">
+                                                    Los libros sin stock aparecen deshabilitados
+                                                </small>
                                             </div>
                                             <div class="form-group">
                                                 <label>Fecha de Préstamo:</label>
                                                 <input type="date" name="loan_date" class="form-control"
-                                                    value="<%= new Date(loan_date).toISOString().split('T')[0] %>" required>
-                                            </div>
-                                            <div class="form-group">
+                                                    value="<%= new Date(loan_date).toISOString().split('T')[0] %>"
+                                                    required>
+                                            </div>                                            <div class="form-group">
                                                 <label>Estado:</label>
                                                 <select name="status" class="form-control" required id="loanStatus">
                                                     <option value="ACTIVE" <%= !returned ? 'selected' : '' %>>Prestado</option>
@@ -69,7 +92,8 @@
                                             </div>
                                             <div class="form-group" id="returnDateGroup">
                                                 <label>Fecha de Devolución:</label>
-                                                <input type="date" name="return_date" class="form-control" id="returnDateInput"
+                                                <input type="date" name="return_date" class="form-control"
+                                                    id="returnDateInput"
                                                     value="<%= returned_at ? new Date(returned_at).toISOString().split('T')[0] : new Date().toISOString().split('T')[0] %>">
                                             </div>
                                             <div class="mt-4">
@@ -92,13 +116,13 @@
 
         <!-- Font Awesome -->
         <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
-        
+
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 var loanStatus = document.getElementById('loanStatus');
                 var returnDateInput = document.getElementById('returnDateInput');
                 var returnDateGroup = document.getElementById('returnDateGroup');
-                
+
                 // Función para mostrar u ocultar el campo de fecha de devolución según el estado
                 function toggleReturnDateField() {
                     if (loanStatus.value === 'RETURNED') {
@@ -109,10 +133,10 @@
                         returnDateInput.required = false;
                     }
                 }
-                
+
                 // Ejecutar al cargar la página
                 toggleReturnDateField();
-                
+
                 // Añadir evento para cambio de estado
                 loanStatus.addEventListener('change', toggleReturnDateField);
             });

@@ -49,12 +49,25 @@
                                                 <select name="id_book" id="id_book" class="form-control" required>
                                                     <option value="">Seleccione un libro</option>
                                                     <% books.forEach(function(book) { %>
-                                                        <option value="<%= book.id_book %>">
-                                                            <%= book.name %> - <%= book.author_name %> (<%=
-                                                                        book.publisher_name %>)
+                                                        <option value="<%= book.id_book %>"
+                                                            data-stock="<%= book.stock %>"
+                                                            data-loaned="<%= book.units_loaned %>" <%=book.stock <=0
+                                                            ? 'disabled' : '' %>>
+                                                            <%= book.name %> - <%= book.author_name %>
+                                                                    (Stock: <%= book.stock %>, Prestados: <%=
+                                                                            book.units_loaned %>)
+                                                                            <%= book.stock <=0 ? ' - SIN STOCK' : '' %>
                                                         </option>
                                                         <% }) %>
                                                 </select>
+                                                <small class="form-text text-muted">Solo se muestran libros con stock
+                                                    disponible</small>
+                                            </div>
+
+                                            <!-- Información de stock del libro seleccionado -->
+                                            <div id="stockInfo" class="alert alert-info" style="display: none;">
+                                                <strong>Información del libro:</strong>
+                                                <div id="stockDetails"></div>
                                             </div>
                                             <div class="form-group mb-3">
                                                 <label>Fecha de devolución:</label>
@@ -82,10 +95,54 @@
 
                 <!-- FOOTER -->
                 <%- include('../plantillas/footer') %>
-        </div>
-
-        <!-- Font Awesome -->
+        </div> <!-- Font Awesome -->
         <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const bookSelect = document.getElementById('id_book');
+                const stockInfo = document.getElementById('stockInfo');
+                const stockDetails = document.getElementById('stockDetails');
+
+                bookSelect.addEventListener('change', function () {
+                    const selectedOption = this.options[this.selectedIndex];
+
+                    if (selectedOption.value) {
+                        const stock = selectedOption.getAttribute('data-stock');
+                        const loaned = selectedOption.getAttribute('data-loaned');
+                        const available = stock - 0; // Convertir a número
+                        const bookName = selectedOption.textContent.split(' - ')[0];
+
+                        stockDetails.innerHTML = `
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Libro:</strong> ${bookName}
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Stock total:</strong> 
+                                    <span class="badge badge-${available > 10 ? 'success' : available > 5 ? 'warning' : available > 0 ? 'danger' : 'dark'}">
+                                        ${stock}
+                                    </span>
+                                </div>
+                                <div class="col-md-3">
+                                    <strong>Prestados:</strong> 
+                                    <span class="badge badge-info">${loaned}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <strong>Disponibles:</strong> 
+                                    <span class="badge badge-${available > 0 ? 'success' : 'danger'}">
+                                        ${available}
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                        stockInfo.style.display = 'block';
+                    } else {
+                        stockInfo.style.display = 'none';
+                    }
+                });
+            });
+        </script>
 </body>
 
 </html>
