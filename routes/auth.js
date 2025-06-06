@@ -6,7 +6,7 @@ const dbConn = require("../lib/db");
 router.get("/login", (req, res) => {
   res.render("auth/login", {
     email: "",
-    messages: {}
+    messages: {},
   });
 });
 
@@ -17,7 +17,7 @@ router.post("/login", (req, res) => {
   if (!email || !password) {
     return res.render("auth/login", {
       email,
-      messages: { error: "Email y contraseña son obligatorios" }
+      messages: { error: "Email y contraseña son obligatorios" },
     });
   }
 
@@ -32,14 +32,14 @@ router.post("/login", (req, res) => {
     if (err) {
       return res.render("auth/login", {
         email,
-        messages: { error: "Error en el servidor" }
+        messages: { error: "Error en el servidor" },
       });
     }
 
     if (users.length === 0) {
       return res.render("auth/login", {
         email,
-        messages: { error: "Credenciales incorrectas" }
+        messages: { error: "Credenciales incorrectas" },
       });
     }
 
@@ -52,7 +52,7 @@ router.post("/login", (req, res) => {
       email: user.email,
       id_role: user.id_role,
       role_name: user.role_name,
-      role_description: user.role_description
+      role_description: user.role_description,
     };
 
     req.flash("success", `Bienvenido ${user.name}`);

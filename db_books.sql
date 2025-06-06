@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-06-2025 a las 19:30:00
+-- Tiempo de generación: 06-06-2025 a las 22:29:52
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -54,7 +54,8 @@ INSERT INTO `authors` (`id_author`, `name`, `state`) VALUES
 (14, 'Juan Rulfo', 1),
 (15, 'Rosa Montero', 1),
 (16, 'Eduardo Galeano', 1),
-(17, 'Eliseo Vega', 1);
+(17, 'Eliseo Vega', 1),
+(18, 'Mario Mendoza', 1);
 
 -- --------------------------------------------------------
 
@@ -107,7 +108,8 @@ INSERT INTO `books` (`id_book`, `name`, `id_author`, `isbn`, `year_published`, `
 (25, 'Historia del Rey Transparente', 9, '9788466322313', '2005', 448, 3, 2, '2025-05-18 21:41:09', '2025-05-18 21:41:09', 1),
 (26, 'Las venas abiertas de América Latina', 10, '9786070303276', '1971', 360, 5, 3, '2025-05-18 21:41:09', '2025-05-18 21:41:09', 1),
 (27, 'El libro de los abrazos', 10, '9789682322761', '1989', 280, 5, 4, '2025-05-18 21:41:09', '2025-05-18 21:41:09', 1),
-(28, 'La biblia', 7, '54657868768768', '0000', 800, 5, 8, '2025-05-20 00:21:05', '2025-05-20 00:21:05', 1);
+(28, 'La biblia', 7, '54657868768768', '0000', 800, 5, 8, '2025-05-20 00:21:05', '2025-05-20 00:21:05', 1),
+(29, 'Scorpio City', 18, '789584202996', '1998', 320, 6, 12, '2025-06-02 18:55:57', '2025-06-02 18:55:57', 1);
 
 -- --------------------------------------------------------
 
@@ -212,6 +214,29 @@ INSERT INTO `publishers` (`id_publisher`, `name`, `state`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `roles`
+--
+
+CREATE TABLE `roles` (
+  `id_role` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `state` tinyint(1) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `roles`
+--
+
+INSERT INTO `roles` (`id_role`, `name`, `description`, `created_at`, `state`) VALUES
+(1, 'ADMIN', 'Administrador del sistema con acceso completo', '2025-06-02 17:41:48', 1),
+(2, 'CLIENT', 'Cliente con acceso limitado para préstamos', '2025-06-02 17:41:48', 1),
+(3, 'LIBRARIAN', 'Bibliotecario con permisos de gestión de libros y préstamos', '2025-06-02 17:41:48', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `users`
 --
 
@@ -220,6 +245,7 @@ CREATE TABLE `users` (
   `name` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `id_role` int(11) NOT NULL,
   `role` enum('ADMIN','CLIENT') NOT NULL DEFAULT 'CLIENT',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `state` tinyint(1) DEFAULT 1
@@ -229,19 +255,21 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id_user`, `name`, `email`, `password`, `role`, `created_at`, `state`) VALUES
-(1, 'Admin User', 'admin@example.com', 'admin123', 'ADMIN', '2025-05-18 19:35:10', 1),
-(2, 'Client User', 'client@example.com', 'client123', 'CLIENT', '2025-05-18 19:35:10', 1),
-(3, 'Ana María González', 'admin1@example.com', 'admin123', 'ADMIN', '2025-05-18 21:40:56', 1),
-(4, 'Luis Fernando Ramírez', 'admin2@example.com', 'admin123', 'ADMIN', '2025-05-18 21:40:56', 1),
-(5, 'Carlos Pérez', 'cliente1@example.com', 'cliente123', 'CLIENT', '2025-05-18 21:40:56', 1),
-(6, 'Laura Martínez', 'cliente2@example.com', 'cliente123', 'CLIENT', '2025-05-18 21:40:56', 1),
-(7, 'Andrés Rodríguez', 'cliente3@example.com', 'cliente123', 'CLIENT', '2025-05-18 21:40:56', 1),
-(8, 'Sofía Torres', 'cliente4@example.com', 'cliente123', 'CLIENT', '2025-05-18 21:40:56', 1),
-(9, 'Julián Gómez', 'cliente5@example.com', 'cliente123', 'CLIENT', '2025-05-18 21:40:56', 1),
-(10, 'Valentina Ruiz', 'cliente6@example.com', 'cliente123', 'CLIENT', '2025-05-18 21:40:56', 1),
-(11, 'Camilo Herrera', 'cliente7@example.com', 'cliente123', 'CLIENT', '2025-05-18 21:40:56', 1),
-(12, 'Natalia Castro', 'cliente8@example.com', 'cliente123', 'CLIENT', '2025-05-18 21:40:56', 1);
+INSERT INTO `users` (`id_user`, `name`, `email`, `password`, `id_role`, `role`, `created_at`, `state`) VALUES
+(1, 'Administrador', 'admin@prueba.com', 'admin123', 1, 'ADMIN', '2025-05-18 19:35:10', 1),
+(2, 'Usuario Cliente', 'cliente.prueba@prueba.com', 'cliente123', 2, 'CLIENT', '2025-05-18 19:35:10', 1),
+(3, 'Ana María González', 'ana.gonzalez@example.com', 'admin123', 1, 'ADMIN', '2025-05-18 21:40:56', 1),
+(4, 'Luis Fernando Ramírez', 'lusis.ramirez@example.com', 'admin123', 1, 'ADMIN', '2025-05-18 21:40:56', 1),
+(5, 'Carlos Pérez', 'carlos.perez@example.com', 'cliente123', 2, 'CLIENT', '2025-05-18 21:40:56', 1),
+(6, 'Laura Martínez', 'laura.martinez@example.com', 'cliente123', 2, 'CLIENT', '2025-05-18 21:40:56', 1),
+(7, 'Andrés Rodríguez', 'andres.redriguez@example.com', 'cliente123', 2, 'CLIENT', '2025-05-18 21:40:56', 1),
+(8, 'Sofía Torres', 'sofia.torres@example.com', 'cliente123', 2, 'CLIENT', '2025-05-18 21:40:56', 1),
+(9, 'Julián Gómez', 'julian.gomez@example.com', 'cliente123', 2, 'CLIENT', '2025-05-18 21:40:56', 1),
+(10, 'Valentina Ruiz', 'valentina.ruiz@example.com', 'cliente123', 2, 'CLIENT', '2025-05-18 21:40:56', 1),
+(11, 'Camilo Herrera', 'camilo.herrera@example.com', 'cliente123', 2, 'CLIENT', '2025-05-18 21:40:56', 1),
+(12, 'Natalia Castro', 'natalia.castro@example.com', 'cliente123', 2, 'CLIENT', '2025-05-18 21:40:56', 1),
+(13, 'María Elena Vásquez', 'maria.vasquez@example.com', 'librarian123', 3, 'CLIENT', '2025-06-02 18:42:07', 1),
+(14, 'zelgaliz', 'zelgaliz@example.com', '123456', 3, 'CLIENT', '2025-06-02 18:50:49', 1);
 
 --
 -- Índices para tablas volcadas
@@ -283,11 +311,19 @@ ALTER TABLE `publishers`
   ADD PRIMARY KEY (`id_publisher`);
 
 --
+-- Indices de la tabla `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id_role`),
+  ADD UNIQUE KEY `unique_role_name` (`name`);
+
+--
 -- Indices de la tabla `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id_user`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `fk_user_role` (`id_role`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -297,13 +333,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `authors`
 --
 ALTER TABLE `authors`
-  MODIFY `id_author` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_author` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `books`
 --
 ALTER TABLE `books`
-  MODIFY `id_book` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_book` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `categories`
@@ -324,10 +360,16 @@ ALTER TABLE `publishers`
   MODIFY `id_publisher` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
+-- AUTO_INCREMENT de la tabla `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restricciones para tablas volcadas
@@ -347,6 +389,12 @@ ALTER TABLE `books`
 ALTER TABLE `loans`
   ADD CONSTRAINT `fk_book` FOREIGN KEY (`id_book`) REFERENCES `books` (`id_book`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `fk_user_role` FOREIGN KEY (`id_role`) REFERENCES `roles` (`id_role`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -8,66 +8,69 @@
 
     <!-- Información del usuario -->
     <% if (user) { %>
-    <div class="px-4 py-3 border-bottom border-secondary">
-        <div class="text-white">
-            <small class="text-muted">Bienvenido</small>
-            <div class="font-weight-bold"><%= user.name %></div>
-            <small class="text-success"><%= user.role_name %></small>
+        <div class="px-4 py-3 border-bottom border-secondary">
+            <div class="text-white">
+                <small class="text-muted">Bienvenido</small>
+                <div class="font-weight-bold">
+                    <%= user.name %>
+                </div>
+                <small class="text-success">
+                    <%= user.role_name %>
+                </small>
+            </div>
         </div>
-    </div>
-    <% } %>
-
-    <!-- Links de navegación -->
-    <nav class="nav flex-column py-3 flex-grow-1">
-        <a href="/dashboard"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">📊</span> Dashboard
-        </a>
-        <a href="/books"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">📚</span> Libros
-        </a>
-        
-        <!-- Solo mostrar estas opciones a ADMIN y LIBRARIAN -->
-        <% if (user && (user.role_name === 'ADMIN' || user.role_name === 'LIBRARIAN')) { %>
-        <a href="/authors"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">👤</span> Autores
-        </a>
-        <a href="/categories"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">🏷️</span> Categorías
-        </a>
-        <a href="/publishers"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">🏢</span> Editoriales
-        </a>
         <% } %>
-        
-        <a href="/loans"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">📖</span> Préstamos
-        </a>
-        
-        <!-- Solo mostrar usuarios a ADMIN -->
-        <% if (user && user.role_name === 'ADMIN') { %>
-        <a href="/users"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">👥</span> Usuarios
-        </a>
-        <% } %>
-    </nav>
 
-    <!-- Botón de logout -->
-    <% if (user) { %>
-    <div class="px-4 py-3 border-top border-secondary">
-        <a href="/auth/logout" 
-           class="btn btn-outline-light btn-sm w-100"
-           onclick="return confirm('¿Está seguro que desea cerrar sesión?')">
-            <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
-        </a>
-    </div>
-    <% } %>
+            <!-- Links de navegación -->
+            <nav class="nav flex-column py-3 flex-grow-1">
+                <a href="/dashboard"
+                    class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                    <span class="mr-3">📊</span> Dashboard
+                </a>
+                <a href="/books"
+                    class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                    <span class="mr-3">📚</span> Libros
+                </a>
+
+                <!-- Solo mostrar estas opciones a ADMIN y LIBRARIAN -->
+                <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN' )) { %>
+                    <a href="/authors"
+                        class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                        <span class="mr-3">👤</span> Autores
+                    </a>
+                    <a href="/categories"
+                        class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                        <span class="mr-3">🏷️</span> Categorías
+                    </a>
+                    <a href="/publishers"
+                        class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                        <span class="mr-3">🏢</span> Editoriales
+                    </a>
+                    <% } %>
+
+                        <a href="/loans"
+                            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                            <span class="mr-3">📖</span> Préstamos
+                        </a>
+
+                        <!-- Solo mostrar usuarios a ADMIN -->
+                        <% if (user && user.role_name==='ADMIN' ) { %>
+                            <a href="/users"
+                                class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                                <span class="mr-3">👥</span> Usuarios
+                            </a>
+                            <% } %>
+            </nav>
+
+            <!-- Botón de logout -->
+            <% if (user) { %>
+                <div class="px-4 py-3 border-top border-secondary">
+                    <a href="/auth/logout" class="btn btn-outline-light btn-sm w-100"
+                        onclick="return confirm('¿Está seguro que desea cerrar sesión?')">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                    </a>
+                </div>
+                <% } %>
 </div>
 
 <!-- Sidebar móvil -->
@@ -85,66 +88,69 @@
 
     <!-- Información del usuario -->
     <% if (user) { %>
-    <div class="px-4 py-3 border-bottom border-secondary">
-        <div class="text-white">
-            <small class="text-muted">Bienvenido</small>
-            <div class="font-weight-bold"><%= user.name %></div>
-            <small class="text-success"><%= user.role_name %></small>
+        <div class="px-4 py-3 border-bottom border-secondary">
+            <div class="text-white">
+                <small class="text-muted">Bienvenido</small>
+                <div class="font-weight-bold">
+                    <%= user.name %>
+                </div>
+                <small class="text-success">
+                    <%= user.role_name %>
+                </small>
+            </div>
         </div>
-    </div>
-    <% } %>
-
-    <!-- Links de navegación -->
-    <nav class="nav flex-column py-3">
-        <a href="/dashboard"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">📊</span> Dashboard
-        </a>
-        <a href="/books"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">📚</span> Libros
-        </a>
-        
-        <!-- Solo mostrar estas opciones a ADMIN y LIBRARIAN -->
-        <% if (user && (user.role_name === 'ADMIN' || user.role_name === 'LIBRARIAN')) { %>
-        <a href="/authors"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">👤</span> Autores
-        </a>
-        <a href="/categories"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">🏷️</span> Categorías
-        </a>
-        <a href="/publishers"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">🏢</span> Editoriales
-        </a>
         <% } %>
-        
-        <a href="/loans"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">📖</span> Préstamos
-        </a>
-        
-        <!-- Solo mostrar usuarios a ADMIN -->
-        <% if (user && user.role_name === 'ADMIN') { %>
-        <a href="/users"
-            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
-            <span class="mr-3">👥</span> Usuarios
-        </a>
-        <% } %>
-    </nav>
 
-    <!-- Botón de logout -->
-    <% if (user) { %>
-    <div class="px-4 py-3 border-top border-secondary">
-        <a href="/auth/logout" 
-           class="btn btn-outline-light btn-sm w-100"
-           onclick="return confirm('¿Está seguro que desea cerrar sesión?')">
-            <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
-        </a>
-    </div>
-    <% } %>
+            <!-- Links de navegación -->
+            <nav class="nav flex-column py-3">
+                <a href="/dashboard"
+                    class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                    <span class="mr-3">📊</span> Dashboard
+                </a>
+                <a href="/books"
+                    class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                    <span class="mr-3">📚</span> Libros
+                </a>
+
+                <!-- Solo mostrar estas opciones a ADMIN y LIBRARIAN -->
+                <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN' )) { %>
+                    <a href="/authors"
+                        class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                        <span class="mr-3">👤</span> Autores
+                    </a>
+                    <a href="/categories"
+                        class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                        <span class="mr-3">🏷️</span> Categorías
+                    </a>
+                    <a href="/publishers"
+                        class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                        <span class="mr-3">🏢</span> Editoriales
+                    </a>
+                    <% } %>
+
+                        <a href="/loans"
+                            class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                            <span class="mr-3">📖</span> Préstamos
+                        </a>
+
+                        <!-- Solo mostrar usuarios a ADMIN -->
+                        <% if (user && user.role_name==='ADMIN' ) { %>
+                            <a href="/users"
+                                class="nav-link text-light d-flex align-items-center px-4 py-3 text-decoration-none hover-effect">
+                                <span class="mr-3">👥</span> Usuarios
+                            </a>
+                            <% } %>
+            </nav>
+
+            <!-- Botón de logout -->
+            <% if (user) { %>
+                <div class="px-4 py-3 border-top border-secondary">
+                    <a href="/auth/logout" class="btn btn-outline-light btn-sm w-100"
+                        onclick="return confirm('¿Está seguro que desea cerrar sesión?')">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                    </a>
+                </div>
+                <% } %>
 </div>
 
 <!-- Botón toggle para móvil -->

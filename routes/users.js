@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
     INNER JOIN roles r ON u.id_role = r.id_role 
     WHERE (u.name LIKE ? OR u.email LIKE ?) AND u.state = 1 
     LIMIT ? OFFSET ?`;
-  
+
   let countQuery = `
     SELECT COUNT(*) AS total 
     FROM users u 
@@ -22,38 +22,46 @@ router.get("/", (req, res) => {
     WHERE (u.name LIKE ? OR u.email LIKE ?) AND u.state = 1`;
   const searchPattern = `%${search}%`;
 
-  dbConn.query(countQuery, [searchPattern, searchPattern], (err, countResult) => {
-    if (err)
-      return res.render("users/index", {
-        data: [],
-        currentPage: 1,
-        totalPages: 1,
-        searchTerm: "",
-        messages: { error: err.message },
-      });
-    const total = countResult[0].total;
-    const totalPages = Math.ceil(total / limit);
-
-    dbConn.query(query, [searchPattern, searchPattern, limit, offset], (err, result) => {
-      if (err) {
-        res.render("users/index", {
+  dbConn.query(
+    countQuery,
+    [searchPattern, searchPattern],
+    (err, countResult) => {
+      if (err)
+        return res.render("users/index", {
           data: [],
           currentPage: 1,
           totalPages: 1,
           searchTerm: "",
           messages: { error: err.message },
         });
-      } else {
-        res.render("users/index", {
-          data: result,
-          currentPage: page,
-          totalPages,
-          searchTerm: search,
-          messages: {},
-        });
-      }
-    });
-  });
+      const total = countResult[0].total;
+      const totalPages = Math.ceil(total / limit);
+
+      dbConn.query(
+        query,
+        [searchPattern, searchPattern, limit, offset],
+        (err, result) => {
+          if (err) {
+            res.render("users/index", {
+              data: [],
+              currentPage: 1,
+              totalPages: 1,
+              searchTerm: "",
+              messages: { error: err.message },
+            });
+          } else {
+            res.render("users/index", {
+              data: result,
+              currentPage: page,
+              totalPages,
+              searchTerm: search,
+              messages: {},
+            });
+          }
+        }
+      );
+    }
+  );
 });
 
 // Página de agregar
@@ -85,7 +93,7 @@ router.get("/add", (req, res) => {
 // Guardar nuevo usuario
 router.post("/add", (req, res) => {
   const { name, email, password, id_role } = req.body;
-  
+
   if (!name || !email || !password || !id_role) {
     // Recargar roles en caso de error
     return dbConn.query("SELECT * FROM roles WHERE state = 1", (err, roles) => {
@@ -110,16 +118,19 @@ router.post("/add", (req, res) => {
 
   dbConn.query("INSERT INTO users SET ?", userData, (err) => {
     if (err) {
-      return dbConn.query("SELECT * FROM roles WHERE state = 1", (err, roles) => {
-        res.render("users/add", {
-          name,
-          email,
-          password: "",
-          id_role,
-          roles: roles || [],
-          messages: { error: err.message },
-        });
-      });
+      return dbConn.query(
+        "SELECT * FROM roles WHERE state = 1",
+        (err, roles) => {
+          res.render("users/add", {
+            name,
+            email,
+            password: "",
+            id_role,
+            roles: roles || [],
+            messages: { error: err.message },
+          });
+        }
+      );
     } else {
       req.flash("success", "Usuario agregado exitosamente");
       res.redirect("/users");
@@ -159,7 +170,7 @@ router.get("/edit/:id", (req, res) => {
 // Actualizar
 router.post("/update/:id", (req, res) => {
   const { name, email, password, id_role } = req.body;
-  
+
   if (!name || !email || !id_role) {
     return dbConn.query("SELECT * FROM roles WHERE state = 1", (err, roles) => {
       res.render("users/edit", {
@@ -189,16 +200,19 @@ router.post("/update/:id", (req, res) => {
     [userData, req.params.id],
     (err) => {
       if (err) {
-        return dbConn.query("SELECT * FROM roles WHERE state = 1", (err, roles) => {
-          res.render("users/edit", {
-            id_user: req.params.id,
-            name,
-            email,
-            id_role,
-            roles: roles || [],
-            messages: { error: err.message },
-          });
-        });
+        return dbConn.query(
+          "SELECT * FROM roles WHERE state = 1",
+          (err, roles) => {
+            res.render("users/edit", {
+              id_user: req.params.id,
+              name,
+              email,
+              id_role,
+              roles: roles || [],
+              messages: { error: err.message },
+            });
+          }
+        );
       } else {
         req.flash("success", "Usuario actualizado correctamente");
         res.redirect("/users");
