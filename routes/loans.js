@@ -368,180 +368,59 @@ router.get("/edit/:id", (req, res) => {
   });
 });
 
-// Actualizar préstamo
+// Actualizar préstamo - Solo permite editar la fecha de préstamo
 router.post("/update/:id", (req, res) => {
   const id = req.params.id;
-  const { id_user, id_book, loan_date, status, return_date } = req.body;
+  const { loan_date } = req.body;
 
-  // Function to reload edit page with error
-  const reloadEditPage = (errorMessage) => {
-    const usersQuery = "SELECT id_user, name, email FROM users WHERE state = 1";
-    const booksQuery = `
-            SELECT b.id_book, b.name, b.stock, a.name as author_name, p.name as publisher_name,
-                   COALESCE(loan_stats.units_loaned, 0) as units_loaned
-            FROM books b
-            JOIN authors a ON b.id_author = a.id_author
-            JOIN publishers p ON b.id_publisher = p.id_publisher
-            LEFT JOIN (
-                SELECT id_book, COUNT(*) as units_loaned
-                FROM loans 
-                WHERE returned = 0 AND state = 1
-                GROUP BY id_book
-            ) loan_stats ON b.id_book = loan_stats.id_book
-            WHERE b.state = 1`;
+  // Validate loan_date
+  if (!loan_date) {
+    req.flash("error", "La fecha de préstamo es requerida");
+    return res.redirect(`/loans/edit/${id}`);
+  }
 
-    dbConn.query(usersQuery, (err, users) => {
-      dbConn.query(booksQuery, (err, books) => {
-        return res.render("loans/edit", {
-          id_loan: id,
-          ...req.body,
-          users: users || [],
-          books: books || [],
-          messages: { error: errorMessage },
-          loan_date: new Date(loan_date),
-          return_date: return_date ? new Date(return_date) : null,
-          status: status || "ACTIVE",
-        });
-      });
-    });
-  };
-
-  // Get current loan data and book stock information
+  // Get current loan data to verify it exists and for error handling
   const loanQuery = `
-        SELECT l.*, b.stock as current_book_stock, new_b.stock as new_book_stock
+        SELECT l.*, u.name as user_name, b.name as book_name 
         FROM loans l
+        JOIN users u ON l.id_user = u.id_user
         JOIN books b ON l.id_book = b.id_book
-        LEFT JOIN books new_b ON new_b.id_book = ?
         WHERE l.id_loan = ? AND l.state = 1`;
 
-  dbConn.query(loanQuery, [id_book, id], (err, loans) => {
+  dbConn.query(loanQuery, [id], (err, loans) => {
     if (err || loans.length === 0) {
       req.flash("error", "Préstamo no encontrado");
       return res.redirect("/loans");
     }
 
     const loan = loans[0];
-    const isBookChanging = parseInt(id_book) !== parseInt(loan.id_book);
-    const isStatusChanging =
-      (status === "RETURNED" && !loan.returned) ||
-      (status !== "RETURNED" && loan.returned);
 
-    // Validate stock if changing book and loan is still active
-    if (isBookChanging && !loan.returned && status !== "RETURNED") {
-      if (!loan.new_book_stock || loan.new_book_stock < 1) {
-        return reloadEditPage(
-          "No hay stock disponible para el libro seleccionado"
-        );
-      }
-    }
+    // Only update the loan_date
+    const updateData = {
+      loan_date: loan_date,
+    };
 
-    // Start transaction for stock management
-    dbConn.beginTransaction((err) => {
-      if (err) {
-        return reloadEditPage(err.message);
-      }
-
-      // Prepare update data
-      const updateData = {
-        id_user: id_user || loan.id_user,
-        id_book: id_book || loan.id_book,
-        loan_date: loan_date || loan.loan_date,
-      };
-
-      // Handle status changes
-      if (status === "RETURNED") {
-        updateData.returned = 1;
-        updateData.returned_at = return_date || new Date();
-      } else {
-        updateData.returned = 0;
-        updateData.returned_at = null;
-      }
-
-      const stockUpdates = [];
-
-      // Stock management for book changes
-      if (isBookChanging && !loan.returned) {
-        // Restore stock for old book
-        stockUpdates.push({
-          query: "UPDATE books SET stock = stock + 1 WHERE id_book = ?",
-          params: [loan.id_book],
-        });
-
-        // Reduce stock for new book (only if not returning)
-        if (status !== "RETURNED") {
-          stockUpdates.push({
-            query: "UPDATE books SET stock = stock - 1 WHERE id_book = ?",
-            params: [id_book],
-          });
-        }
-      }
-
-      // Stock management for status changes (without book change)
-      if (!isBookChanging && isStatusChanging) {
-        if (status === "RETURNED") {
-          // Restore stock when marking as returned
-          stockUpdates.push({
-            query: "UPDATE books SET stock = stock + 1 WHERE id_book = ?",
-            params: [loan.id_book],
-          });
-        } else {
-          // Reduce stock when marking as active
-          stockUpdates.push({
-            query: "UPDATE books SET stock = stock - 1 WHERE id_book = ?",
-            params: [loan.id_book],
-          });
-        }
-      }
-
-      // Execute stock updates
-      const executeStockUpdates = (updates, callback) => {
-        if (updates.length === 0) return callback(null);
-
-        let completed = 0;
-        for (const update of updates) {
-          dbConn.query(update.query, update.params, (err) => {
-            if (err) return callback(err);
-            completed++;
-            if (completed === updates.length) callback(null);
-          });
-        }
-      };
-
-      executeStockUpdates(stockUpdates, (err) => {
+    dbConn.query(
+      "UPDATE loans SET ? WHERE id_loan = ?",
+      [updateData, id],
+      (err) => {
         if (err) {
-          return dbConn.rollback(() => {
-            reloadEditPage("Error al actualizar stock: " + err.message);
-          });
+          req.flash(
+            "error",
+            "Error al actualizar la fecha del préstamo: " + err.message
+          );
+          return res.redirect(`/loans/edit/${id}`);
         }
 
-        // Update the loan
-        dbConn.query(
-          "UPDATE loans SET ? WHERE id_loan = ?",
-          [updateData, id],
-          (err) => {
-            if (err) {
-              return dbConn.rollback(() => {
-                reloadEditPage(err.message);
-              });
-            }
-
-            dbConn.commit((err) => {
-              if (err) {
-                return dbConn.rollback(() => {
-                  reloadEditPage(err.message);
-                });
-              }
-              req.flash("success", "Préstamo actualizado correctamente");
-              res.redirect("/loans");
-            });
-          }
+        req.flash(
+          "success",
+          `Fecha de préstamo actualizada correctamente para "${loan.user_name}" - "${loan.book_name}"`
         );
-      });
-    });
+        res.redirect("/loans");
+      }
+    );
   });
-});
-
-// Eliminar préstamo (soft delete)
+}); // Eliminar préstamo (soft delete)
 router.get("/delete/:id", (req, res) => {
   dbConn.query(
     "UPDATE loans SET state = 0 WHERE id_loan = ?",
