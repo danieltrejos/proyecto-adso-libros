@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es" class="h-full">
 
-<head>    <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
     <title>Listado de Usuarios</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -72,13 +73,15 @@
                                                                     </td>
                                                                     <td>
                                                                         <%= user.email %>
-                                                                    </td>                                                                    <td>
+                                                                    </td>
+                                                                    <td>
                                                                         <span
                                                                             class="badge badge-<%= user.role_name === 'ADMIN' ? 'success' : (user.role_name === 'LIBRARIAN' ? 'warning' : 'secondary') %> d-inline-block text-center"
                                                                             style="min-width: 100px;">
                                                                             <%= user.role_name %>
                                                                         </span>
-                                                                    </td><td class="text-center">
+                                                                    </td>
+                                                                    <td class="text-center">
                                                                         <a href="/users/edit/<%= user.id_user %>"
                                                                             class="btn btn-sm btn-warning me-1"
                                                                             title="Editar usuario">
@@ -144,7 +147,8 @@
                 </main>
 
                 <!-- FOOTER -->
-                <%- include('../plantillas/footer') %>        </div>
+                <%- include('../plantillas/footer') %>
+        </div>
 
 </body>
 

@@ -123,7 +123,7 @@
                                                                             <% if (book.stock> 10) { %>
                                                                                 <span
                                                                                     class="badge badge-success d-inline-block text-center"
-                                                                                    style="min-width: 100px;">
+                                                                                    style="min-width: 100px; background-color: #28a745;">
                                                                                     <%= book.stock %> disponibles
                                                                                 </span>
                                                                                 <% } else if (book.stock> 5) { %>
@@ -154,7 +154,8 @@
                                                                                     class="btn btn-sm btn-warning me-1"
                                                                                     title="Editar libro">
                                                                                     <i class="fas fa-edit"></i>
-                                                                                </a>                                                                                <a href="/books/delete/<%= book.id_book %>"
+                                                                                </a> <a
+                                                                                    href="/books/delete/<%= book.id_book %>"
                                                                                     onclick="return confirm('¿Está seguro que desea deshabilitar este libro?')"
                                                                                     class="btn btn-sm btn-secondary"
                                                                                     title="Deshabilitar libro">

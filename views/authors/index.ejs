@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es" class="h-full">
 
-<head>    <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
     <title>Listado de Autores</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -66,7 +67,8 @@
                                                                     </td>
                                                                     <td>
                                                                         <%= data[i].name %>
-                                                                    </td>                                                                    <td class="text-center">
+                                                                    </td>
+                                                                    <td class="text-center">
                                                                         <a href="/authors/edit/<%= data[i].id_author %>"
                                                                             class="btn btn-sm btn-warning me-1"
                                                                             title="Editar autor">
@@ -136,7 +138,7 @@
                     </div>
                 </main>
 
-                <!-- FOOTER -->                <%- include('../plantillas/footer') %>
+                <!-- FOOTER --> <%- include('../plantillas/footer') %>
 
         </div>
 
