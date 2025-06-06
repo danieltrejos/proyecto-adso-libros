@@ -59,6 +59,11 @@
             background-color: #059669;
             color: white;
         }
+
+        /* Ancho uniforme para botones principales */
+        .btn-uniform {
+            min-width: 140px;
+        }
     </style>
 </head>
 
@@ -101,11 +106,11 @@
                                         actualiza la información existente.</p>
                                     <div class="d-flex gap-2">
                                         <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN' )) { %>
-                                            <a href="/books/add" class="btn-action">
+                                            <a href="/books/add" class="btn-action btn-uniform">
                                                 <i class="fas fa-plus"></i> Añadir Libro
                                             </a>
                                             <% } %>
-                                                <a href="/books" class="btn-action btn-ver-listado">
+                                                <a href="/books" class="btn-action btn-ver-listado btn-uniform">
                                                     <i class="fas fa-list"></i> Ver Listado
                                                 </a>
                                     </div>
@@ -125,11 +130,11 @@
                                         devoluciones.</p>
                                     <div class="d-flex gap-2">
                                         <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN' )) { %>
-                                            <a href="/loans/add" class="btn-action">
+                                            <a href="/loans/add" class="btn-action btn-uniform">
                                                 <i class="fas fa-plus"></i> Añadir Préstamo
                                             </a>
                                             <% } %>
-                                                <a href="/loans" class="btn-action btn-ver-listado">
+                                                <a href="/loans" class="btn-action btn-ver-listado btn-uniform">
                                                     <i class="fas fa-list"></i> Ver Listado
                                                 </a>
                                     </div>
@@ -148,10 +153,10 @@
                                             en
                                             el sistema.</p>
                                         <div class="d-flex gap-2">
-                                            <a href="/authors/add" class="btn-action">
+                                            <a href="/authors/add" class="btn-action btn-uniform">
                                                 <i class="fas fa-plus"></i> Añadir Autor
                                             </a>
-                                            <a href="/authors" class="btn-action btn-ver-listado">
+                                            <a href="/authors" class="btn-action btn-ver-listado btn-uniform">
                                                 <i class="fas fa-list"></i> Ver Listado
                                             </a>
                                         </div>
@@ -171,10 +176,11 @@
                                                     para una
                                                     mejor clasificación.</p>
                                                 <div class="d-flex gap-2">
-                                                    <a href="/categories/add" class="btn-action">
+                                                    <a href="/categories/add" class="btn-action btn-uniform">
                                                         <i class="fas fa-plus"></i> Añadir Categoría
                                                     </a>
-                                                    <a href="/categories" class="btn-action btn-ver-listado">
+                                                    <a href="/categories"
+                                                        class="btn-action btn-ver-listado btn-uniform">
                                                         <i class="fas fa-list"></i> Ver Listado
                                                     </a>
                                                 </div>
@@ -195,10 +201,11 @@
                                                             editoriales y sus
                                                             publicaciones.</p>
                                                         <div class="d-flex gap-2">
-                                                            <a href="/publishers/add" class="btn-action">
+                                                            <a href="/publishers/add" class="btn-action btn-uniform">
                                                                 <i class="fas fa-plus"></i> Añadir Editorial
                                                             </a>
-                                                            <a href="/publishers" class="btn-action btn-ver-listado">
+                                                            <a href="/publishers"
+                                                                class="btn-action btn-ver-listado btn-uniform">
                                                                 <i class="fas fa-list"></i> Ver Listado
                                                             </a>
                                                         </div>
@@ -218,10 +225,11 @@
                                                                     usuarios del sistema y sus roles.
                                                                 </p>
                                                                 <div class="d-flex gap-2">
-                                                                    <a href="/users/add" class="btn-action">
+                                                                    <a href="/users/add" class="btn-action btn-uniform">
                                                                         <i class="fas fa-plus"></i> Añadir Usuario
                                                                     </a>
-                                                                    <a href="/users" class="btn-action btn-ver-listado">
+                                                                    <a href="/users"
+                                                                        class="btn-action btn-ver-listado btn-uniform">
                                                                         <i class="fas fa-list"></i> Ver Listado
                                                                     </a>
                                                                 </div>
