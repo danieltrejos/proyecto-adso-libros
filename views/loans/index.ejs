@@ -18,6 +18,11 @@
         .table-responsive {
             overflow-x: auto;
         }
+
+        /* Ancho uniforme para botones principales */
+        .btn-uniform {
+            min-width: 140px;
+        }
     </style>
 </head>
 
@@ -48,10 +53,12 @@
                                                 <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN'
                                                     )) { %>
                                                     <div>
-                                                        <a href="/loans/returned" class="btn btn-outline-success mr-2">
+                                                        <a href="/loans/returned"
+                                                            class="btn btn-outline-success mr-2 btn-uniform">
                                                             <i class="fas fa-history"></i> Devoluciones
                                                         </a>
-                                                        <a href="/loans/add" class="btn btn-success">Añadir Préstamo</a>
+                                                        <a href="/loans/add" class="btn btn-success btn-uniform">Añadir
+                                                            Préstamo</a>
                                                     </div>
                                                     <% } %>
                                             </div>
@@ -62,10 +69,10 @@
                                                         placeholder="Buscar por usuario o libro..."
                                                         class="form-control mr-2" style="min-width: 300px;">
                                                     <button type="submit"
-                                                        class="btn btn-outline-success">Buscar</button>
+                                                        class="btn btn-outline-success btn-uniform">Buscar</button>
                                                     <% if (searchTerm) { %>
                                                         <a href="/loans"
-                                                            class="btn btn-outline-secondary ml-2">Limpiar</a>
+                                                            class="btn btn-outline-secondary ml-2 btn-uniform">Limpiar</a>
                                                         <% } %>
                                                 </form>
 

@@ -18,6 +18,11 @@
         .table-responsive {
             overflow-x: auto;
         }
+
+        /* Ancho uniforme para botones principales */
+        .btn-uniform {
+            min-width: 140px;
+        }
     </style>
 </head>
 
@@ -49,10 +54,11 @@
                                                 <% if (user && (user.role_name==='ADMIN' || user.role_name==='LIBRARIAN'
                                                     )) { %>
                                                     <div>
-                                                        <a href="/books/restore" class="btn btn-outline-success mr-2">
+                                                        <a href="/books/restore"
+                                                            class="btn btn-outline-success mr-2 btn-uniform">
                                                             <i class="fas fa-undo"></i> Recuperar
                                                         </a>
-                                                        <a href="/books/add" class="btn btn-success">
+                                                        <a href="/books/add" class="btn btn-success btn-uniform">
                                                             <i class="fas fa-plus"></i> Añadir Libros
                                                         </a>
                                                     </div>
@@ -65,10 +71,10 @@
                                                         placeholder="Buscar por nombre o autor..."
                                                         class="form-control mr-2" style="min-width: 300px;">
                                                     <button type="submit"
-                                                        class="btn btn-outline-success">Buscar</button>
+                                                        class="btn btn-outline-success btn-uniform">Buscar</button>
                                                     <% if (searchTerm) { %>
                                                         <a href="/books"
-                                                            class="btn btn-outline-secondary ml-2">Limpiar</a>
+                                                            class="btn btn-outline-secondary ml-2 btn-uniform">Limpiar</a>
                                                         <% } %>
                                                 </form>
 

@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
+    <style>
+        /* Ancho uniforme para botones principales */
+        .btn-uniform {
+            min-width: 140px;
+        }
+    </style>
 </head>
 
 <body class="bg-emerald-50 flex min-h-screen w-screen">
@@ -35,7 +41,8 @@
                                         <div class="card">
                                             <div class="card-header d-flex justify-content-between align-items-center">
                                                 <h5 class="mb-0">🏷️ Listado de Categorías</h5>
-                                                <a href="/categories/add" class="btn btn-success">Añadir Categoría</a>
+                                                <a href="/categories/add" class="btn btn-success btn-uniform">Añadir
+                                                    Categoría</a>
                                             </div>
 
                                             <div class="card-body">
@@ -44,10 +51,10 @@
                                                         placeholder="Buscar categoría..." class="form-control mr-2"
                                                         style="min-width: 300px;">
                                                     <button type="submit"
-                                                        class="btn btn-outline-success">Buscar</button>
+                                                        class="btn btn-outline-success btn-uniform">Buscar</button>
                                                     <% if (searchTerm) { %>
                                                         <a href="/categories"
-                                                            class="btn btn-outline-secondary ml-2">Limpiar</a>
+                                                            class="btn btn-outline-secondary ml-2 btn-uniform">Limpiar</a>
                                                         <% } %>
                                                 </form>
 
