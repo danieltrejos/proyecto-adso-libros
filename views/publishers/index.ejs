@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="es" class="h-full">
 
-<head>
-    <meta charset="UTF-8">
+<head>    <meta charset="UTF-8">
     <title>Listado de Editoriales</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 
@@ -67,16 +67,17 @@
                                                                     </td>
                                                                     <td>
                                                                         <%= publisher.name %>
-                                                                    </td>
-                                                                    <td class="text-center">
+                                                                    </td>                                                                    <td class="text-center">
                                                                         <a href="/publishers/edit/<%= publisher.id_publisher %>"
-                                                                            class="btn btn-sm btn-warning">
-                                                                            <i class="fas fa-edit"></i> Editar
+                                                                            class="btn btn-sm btn-warning me-1"
+                                                                            title="Editar editorial">
+                                                                            <i class="fas fa-edit"></i>
                                                                         </a>
                                                                         <a href="/publishers/delete/<%= publisher.id_publisher %>"
-                                                                            onclick="return confirm('¿Está seguro que desea eliminar esta editorial?')"
-                                                                            class="btn btn-sm btn-danger">
-                                                                            <i class="fas fa-trash"></i> Eliminar
+                                                                            onclick="return confirm('¿Está seguro que desea deshabilitar esta editorial?')"
+                                                                            class="btn btn-sm btn-secondary"
+                                                                            title="Deshabilitar editorial">
+                                                                            <i class="fas fa-eye-slash"></i>
                                                                         </a>
                                                                     </td>
                                                                 </tr>
@@ -131,13 +132,10 @@
                     </div>
                 </main>
 
-                <!-- FOOTER -->
-                <%- include('../plantillas/footer') %>
+                <!-- FOOTER -->                <%- include('../plantillas/footer') %>
 
         </div>
 
-        <!-- Font Awesome -->
-        <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

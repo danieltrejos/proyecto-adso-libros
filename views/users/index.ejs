@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="es" class="h-full">
 
-<head>
-    <meta charset="UTF-8">
+<head>    <meta charset="UTF-8">
     <title>Listado de Usuarios</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 
@@ -72,22 +72,23 @@
                                                                     </td>
                                                                     <td>
                                                                         <%= user.email %>
-                                                                    </td>
-                                                                    <td>
+                                                                    </td>                                                                    <td>
                                                                         <span
-                                                                            class="badge badge-<%= user.role_name === 'ADMIN' ? 'primary' : (user.role_name === 'LIBRARIAN' ? 'info' : 'secondary') %>">
+                                                                            class="badge badge-<%= user.role_name === 'ADMIN' ? 'success' : (user.role_name === 'LIBRARIAN' ? 'warning' : 'secondary') %> d-inline-block text-center"
+                                                                            style="min-width: 100px;">
                                                                             <%= user.role_name %>
                                                                         </span>
-                                                                    </td>
-                                                                    <td class="text-center">
+                                                                    </td><td class="text-center">
                                                                         <a href="/users/edit/<%= user.id_user %>"
-                                                                            class="btn btn-sm btn-warning">
-                                                                            <i class="fas fa-edit"></i> Editar
+                                                                            class="btn btn-sm btn-warning me-1"
+                                                                            title="Editar usuario">
+                                                                            <i class="fas fa-edit"></i>
                                                                         </a>
                                                                         <a href="/users/delete/<%= user.id_user %>"
-                                                                            onclick="return confirm('¿Está seguro que desea eliminar este usuario?')"
-                                                                            class="btn btn-sm btn-danger">
-                                                                            <i class="fas fa-trash"></i> Eliminar
+                                                                            onclick="return confirm('¿Está seguro que desea deshabilitar este usuario?')"
+                                                                            class="btn btn-sm btn-secondary"
+                                                                            title="Deshabilitar usuario">
+                                                                            <i class="fas fa-eye-slash"></i>
                                                                         </a>
                                                                     </td>
                                                                 </tr>
@@ -143,12 +144,8 @@
                 </main>
 
                 <!-- FOOTER -->
-                <%- include('../plantillas/footer') %>
+                <%- include('../plantillas/footer') %>        </div>
 
-        </div>
-
-        <!-- Font Awesome -->
-        <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
