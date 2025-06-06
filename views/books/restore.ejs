@@ -37,98 +37,142 @@
 
                         <% if (messages.success) { %>
                             <div class="alert alert-success"><%- messages.success %></div>
-                        <% } %>
-                        <% if (messages.error) { %>
-                            <div class="alert alert-danger"><%- messages.error %></div>
-                        <% } %>
-
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">📚 Backup de Libros</h5>
-                                <a href="/books" class="btn btn-success">
-                                    <i class="fas fa-arrow-left"></i> Volver al listado
-                                </a>
-                            </div>
-
-                            <div class="card-body">
-                                <form method="GET" action="/books/restore" class="form-inline mb-3">
-                                    <input type="text" name="search" value="<%= searchTerm %>"
-                                        placeholder="Buscar por nombre o autor..." class="form-control mr-2"
-                                        style="min-width: 300px;">
-                                    <button type="submit" class="btn btn-outline-success">Buscar</button>
-                                    <% if (searchTerm) { %>
-                                        <a href="/books/restore" class="btn btn-outline-secondary ml-2">Limpiar</a>
+                            <% } %>
+                                <% if (messages.error) { %>
+                                    <div class="alert alert-danger"><%- messages.error %></div>
                                     <% } %>
-                                </form>
 
-                                <% if (data.length > 0) { %>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Nombre</th>
-                                                    <th>Autor</th>
-                                                    <th>ISBN</th>
-                                                    <th>Editorial</th>
-                                                    <th class="text-center">Acción</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% data.forEach((book, i) => { %>
-                                                    <tr>
-                                                        <td><%= ((currentPage - 1) * 5) + (i + 1) %></td>
-                                                        <td><%= book.name %></td>
-                                                        <td><%= book.author_name %></td>
-                                                        <td><%= book.isbn %></td>
-                                                        <td><%= book.publisher_name %></td>
-                                                        <td class="text-center">
-                                                            <a href="/books/recover/<%= book.id_book %>"
-                                                                class="btn btn-sm btn-success">
-                                                                <i class="fas fa-undo"></i> Restaurar
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                <% }) %>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        <div class="card">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-0">📚 Backup de Libros</h5>
+                                                <a href="/books" class="btn btn-success">
+                                                    <i class="fas fa-arrow-left"></i> Volver al listado
+                                                </a>
+                                            </div>
 
-                                    <% if (totalPages > 1) { %>
-                                        <nav class="mt-3">
-                                            <ul class="pagination justify-content-center">
-                                                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-                                                    <a class="page-link custom-green"
-                                                        href="/books/restore?page=<%= currentPage - 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&laquo;</a>
-                                                </li>
-                                                <% for (let i=1; i <= totalPages; i++) { %>
-                                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                                        <a class="page-link custom-green"
-                                                            href="/books/restore?page=<%= i %><%= searchTerm ? '&search=' + searchTerm : '' %>">
-                                                            <%= i %>
-                                                        </a>
-                                                    </li>
-                                                <% } %>
-                                                <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-                                                    <a class="page-link custom-green"
-                                                        href="/books/restore?page=<%= currentPage + 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&raquo;</a>
-                                                </li>
-                                            </ul>
-                                        </nav>
-                                    <% } %>
-                                <% } else { %>
-                                    <div class="text-center text-muted py-5">
-                                        <% if (searchTerm) { %>
-                                            <p>No se encontraron libros eliminados con "<%= searchTerm %>"</p>
-                                            <a href="/books/restore" class="btn btn-outline-success">Ver todos los eliminados</a>
-                                        <% } else { %>
-                                            <p>No hay libros eliminados para restaurar.</p>
-                                            <a href="/books" class="btn btn-outline-success">Volver al listado</a>
-                                        <% } %>
-                                    </div>
-                                <% } %>
-                            </div>
-                        </div>
+                                            <div class="card-body">
+                                                <form method="GET" action="/books/restore" class="form-inline mb-3">
+                                                    <input type="text" name="search" value="<%= searchTerm %>"
+                                                        placeholder="Buscar por nombre o autor..."
+                                                        class="form-control mr-2" style="min-width: 300px;">
+                                                    <button type="submit"
+                                                        class="btn btn-outline-success">Buscar</button>
+                                                    <% if (searchTerm) { %>
+                                                        <a href="/books/restore"
+                                                            class="btn btn-outline-secondary ml-2">Limpiar</a>
+                                                        <% } %>
+                                                </form>
+
+                                                <% if (data.length> 0) { %>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Nombre</th>
+                                                                    <th>Autor</th>
+                                                                    <th>ISBN</th>
+                                                                    <th>Editorial</th>
+                                                                    <th>Stock</th>
+                                                                    <th class="text-center">Acción</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <% data.forEach((book, i)=> { %>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <%= ((currentPage - 1) * 5) + (i + 1) %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.name %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.author_name %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.isbn %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= book.publisher_name %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <% if (book.stock> 10) { %>
+                                                                                <span class="badge badge-success">
+                                                                                    <%= book.stock %> disponibles
+                                                                                </span>
+                                                                                <% } else if (book.stock> 5) { %>
+                                                                                    <span class="badge badge-warning">
+                                                                                        <%= book.stock %> disponibles
+                                                                                    </span>
+                                                                                    <% } else if (book.stock> 0) { %>
+                                                                                        <span
+                                                                                            class="badge badge-danger">
+                                                                                            <%= book.stock %>
+                                                                                                disponibles
+                                                                                        </span>
+                                                                                        <% } else { %>
+                                                                                            <span
+                                                                                                class="badge badge-dark">
+                                                                                                Sin stock
+                                                                                            </span>
+                                                                                            <% } %>
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <a href="/books/recover/<%= book.id_book %>"
+                                                                                class="btn btn-sm btn-success">
+                                                                                <i class="fas fa-undo"></i> Restaurar
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% }) %>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+
+                                                    <% if (totalPages> 1) { %>
+                                                        <nav class="mt-3">
+                                                            <ul class="pagination justify-content-center">
+                                                                <li
+                                                                    class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                                                    <a class="page-link custom-green"
+                                                                        href="/books/restore?page=<%= currentPage - 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&laquo;</a>
+                                                                </li>
+                                                                <% for (let i=1; i <=totalPages; i++) { %>
+                                                                    <li
+                                                                        class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                                        <a class="page-link custom-green"
+                                                                            href="/books/restore?page=<%= i %><%= searchTerm ? '&search=' + searchTerm : '' %>">
+                                                                            <%= i %>
+                                                                        </a>
+                                                                    </li>
+                                                                    <% } %>
+                                                                        <li
+                                                                            class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                                                            <a class="page-link custom-green"
+                                                                                href="/books/restore?page=<%= currentPage + 1 %><%= searchTerm ? '&search=' + searchTerm : '' %>">&raquo;</a>
+                                                                        </li>
+                                                            </ul>
+                                                        </nav>
+                                                        <% } %>
+                                                            <% } else { %>
+                                                                <div class="text-center text-muted py-5">
+                                                                    <% if (searchTerm) { %>
+                                                                        <p>No se encontraron libros eliminados con "<%=
+                                                                                searchTerm %>"</p>
+                                                                        <a href="/books/restore"
+                                                                            class="btn btn-outline-success">Ver todos
+                                                                            los eliminados</a>
+                                                                        <% } else { %>
+                                                                            <p>No hay libros eliminados para restaurar.
+                                                                            </p>
+                                                                            <a href="/books"
+                                                                                class="btn btn-outline-success">Volver
+                                                                                al listado</a>
+                                                                            <% } %>
+                                                                </div>
+                                                                <% } %>
+                                            </div>
+                                        </div>
                     </div>
                 </main>
 

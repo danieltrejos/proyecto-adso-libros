@@ -24,79 +24,109 @@ router.get("/", (req, res) => {
         WHERE (b.name LIKE ? OR a.name LIKE ?) AND b.state = 1`;
   const searchPattern = `%${search}%`;
 
-  dbConn.query(countQuery, [searchPattern, searchPattern], (err, countResult) => {
-    if (err)
-      return res.render("books/index", {
-        data: [],
-        currentPage: 1,
-        totalPages: 1,
-        searchTerm: "",
-        messages: { error: err.message },
-      });
-
-    const total = countResult[0].total;
-    const totalPages = Math.ceil(total / limit);
-
-    dbConn.query(query, [searchPattern, searchPattern, limit, offset], (err, result) => {
-      if (err) {
-        res.render("books/index", {
+  dbConn.query(
+    countQuery,
+    [searchPattern, searchPattern],
+    (err, countResult) => {
+      if (err)
+        return res.render("books/index", {
           data: [],
           currentPage: 1,
           totalPages: 1,
           searchTerm: "",
           messages: { error: err.message },
         });
-      } else {
-        res.render("books/index", {
-          data: result,
-          currentPage: page,
-          totalPages,
-          searchTerm: search,
-          messages: {},
-        });
-      }
-    });
-  });
+
+      const total = countResult[0].total;
+      const totalPages = Math.ceil(total / limit);
+
+      dbConn.query(
+        query,
+        [searchPattern, searchPattern, limit, offset],
+        (err, result) => {
+          if (err) {
+            res.render("books/index", {
+              data: [],
+              currentPage: 1,
+              totalPages: 1,
+              searchTerm: "",
+              messages: { error: err.message },
+            });
+          } else {
+            res.render("books/index", {
+              data: result,
+              currentPage: page,
+              totalPages,
+              searchTerm: search,
+              messages: {},
+            });
+          }
+        }
+      );
+    }
+  );
 });
 
 // Página de agregar
 router.get("/add", (req, res) => {
   // Cargar autores, categorías y editoriales para los selectores
   const authorsQuery = "SELECT id_author, name FROM authors WHERE state = 1";
-  const categoriesQuery = "SELECT id_category, name FROM categories WHERE state = 1";
-  const publishersQuery = "SELECT id_publisher, name FROM publishers WHERE state = 1";
+  const categoriesQuery =
+    "SELECT id_category, name FROM categories WHERE state = 1";
+  const publishersQuery =
+    "SELECT id_publisher, name FROM publishers WHERE state = 1";
 
   dbConn.query(authorsQuery, (err, authors) => {
     if (err) {
       return res.render("books/add", {
-        name: "", isbn: "", year_published: "", num_pages: "",
-        authors: [], categories: [], publishers: [],
-        messages: { error: err.message }
+        name: "",
+        isbn: "",
+        year_published: "",
+        num_pages: "",
+        authors: [],
+        categories: [],
+        publishers: [],
+        messages: { error: err.message },
       });
     }
 
     dbConn.query(categoriesQuery, (err, categories) => {
       if (err) {
         return res.render("books/add", {
-          name: "", isbn: "", year_published: "", num_pages: "",
-          authors, categories: [], publishers: [],
-          messages: { error: err.message }
+          name: "",
+          isbn: "",
+          year_published: "",
+          num_pages: "",
+          authors,
+          categories: [],
+          publishers: [],
+          messages: { error: err.message },
         });
       }
 
       dbConn.query(publishersQuery, (err, publishers) => {
         if (err) {
           return res.render("books/add", {
-            name: "", isbn: "", year_published: "", num_pages: "",
-            authors, categories, publishers: [],
-            messages: { error: err.message }
+            name: "",
+            isbn: "",
+            year_published: "",
+            num_pages: "",
+            authors,
+            categories,
+            publishers: [],
+            messages: { error: err.message },
           });
         }
 
         res.render("books/add", {
-          name: "", isbn: "", year_published: "", num_pages: "",
-          authors, categories, publishers,
-          messages: {}
+          name: "",
+          isbn: "",
+          year_published: "",
+          num_pages: "",
+          authors,
+          categories,
+          publishers,
+          messages: {},
         });
       });
     });
@@ -113,6 +143,7 @@ router.post("/add", function (req, res, next) {
     id_author,
     id_category,
     id_publisher,
+    stock,
   } = req.body;
   const errors =
     !name ||
@@ -121,13 +152,18 @@ router.post("/add", function (req, res, next) {
     !num_pages ||
     !id_author ||
     !id_category ||
-    !id_publisher;
+    !id_publisher ||
+    stock === undefined ||
+    stock === null ||
+    stock === "";
 
   if (errors) {
     // Recargar los selectores en caso de error
     const authorsQuery = "SELECT id_author, name FROM authors WHERE state = 1";
-    const categoriesQuery = "SELECT id_category, name FROM categories WHERE state = 1";
-    const publishersQuery = "SELECT id_publisher, name FROM publishers WHERE state = 1";
+    const categoriesQuery =
+      "SELECT id_category, name FROM categories WHERE state = 1";
+    const publishersQuery =
+      "SELECT id_publisher, name FROM publishers WHERE state = 1";
 
     dbConn.query(authorsQuery, (err, authors) => {
       dbConn.query(categoriesQuery, (err, categories) => {
@@ -138,14 +174,13 @@ router.post("/add", function (req, res, next) {
             authors,
             categories,
             publishers,
-            messages: { error: "Por favor completa todos los campos." }
+            messages: { error: "Por favor completa todos los campos." },
           });
         });
       });
     });
     return;
   }
-
   const form_data = {
     name,
     isbn,
@@ -154,15 +189,19 @@ router.post("/add", function (req, res, next) {
     id_author,
     id_category,
     id_publisher,
+    stock: parseInt(stock) || 0,
     state: 1,
   };
 
   dbConn.query("INSERT INTO books SET ?", form_data, function (err) {
     if (err) {
       // Recargar los selectores en caso de error
-      const authorsQuery = "SELECT id_author, name FROM authors WHERE state = 1";
-      const categoriesQuery = "SELECT id_category, name FROM categories WHERE state = 1";
-      const publishersQuery = "SELECT id_publisher, name FROM publishers WHERE state = 1";
+      const authorsQuery =
+        "SELECT id_author, name FROM authors WHERE state = 1";
+      const categoriesQuery =
+        "SELECT id_category, name FROM categories WHERE state = 1";
+      const publishersQuery =
+        "SELECT id_publisher, name FROM publishers WHERE state = 1";
 
       dbConn.query(authorsQuery, (err, authors) => {
         dbConn.query(categoriesQuery, (err, categories) => {
@@ -172,7 +211,7 @@ router.post("/add", function (req, res, next) {
               authors,
               categories,
               publishers,
-              messages: { error: err.message }
+              messages: { error: err.message },
             });
           });
         });
@@ -201,9 +240,12 @@ router.get("/edit/:id", (req, res) => {
       const book = books[0];
 
       // Luego cargamos los datos para los selectores
-      const authorsQuery = "SELECT id_author, name FROM authors WHERE state = 1";
-      const categoriesQuery = "SELECT id_category, name FROM categories WHERE state = 1";
-      const publishersQuery = "SELECT id_publisher, name FROM publishers WHERE state = 1";
+      const authorsQuery =
+        "SELECT id_author, name FROM authors WHERE state = 1";
+      const categoriesQuery =
+        "SELECT id_category, name FROM categories WHERE state = 1";
+      const publishersQuery =
+        "SELECT id_publisher, name FROM publishers WHERE state = 1";
 
       dbConn.query(authorsQuery, (err, authors) => {
         if (err) {
@@ -228,7 +270,7 @@ router.get("/edit/:id", (req, res) => {
               authors,
               categories,
               publishers,
-              messages: {}
+              messages: {},
             });
           });
         });
@@ -248,6 +290,7 @@ router.post("/update/:id", (req, res) => {
     id_author,
     id_category,
     id_publisher,
+    stock,
   } = req.body;
   const errors =
     !name ||
@@ -256,13 +299,18 @@ router.post("/update/:id", (req, res) => {
     !num_pages ||
     !id_author ||
     !id_category ||
-    !id_publisher;
+    !id_publisher ||
+    stock === undefined ||
+    stock === null ||
+    stock === "";
 
   if (errors) {
     // Recargar los selectores en caso de error
     const authorsQuery = "SELECT id_author, name FROM authors WHERE state = 1";
-    const categoriesQuery = "SELECT id_category, name FROM categories WHERE state = 1";
-    const publishersQuery = "SELECT id_publisher, name FROM publishers WHERE state = 1";
+    const categoriesQuery =
+      "SELECT id_category, name FROM categories WHERE state = 1";
+    const publishersQuery =
+      "SELECT id_publisher, name FROM publishers WHERE state = 1";
 
     dbConn.query(authorsQuery, (err, authors) => {
       dbConn.query(categoriesQuery, (err, categories) => {
@@ -274,14 +322,13 @@ router.post("/update/:id", (req, res) => {
             authors,
             categories,
             publishers,
-            messages: { error: "Por favor completa todos los campos." }
+            messages: { error: "Por favor completa todos los campos." },
           });
         });
       });
     });
     return;
   }
-
   const form_data = {
     name,
     isbn,
@@ -290,6 +337,7 @@ router.post("/update/:id", (req, res) => {
     id_author,
     id_category,
     id_publisher,
+    stock: parseInt(stock) || 0,
   };
 
   dbConn.query(
@@ -298,9 +346,12 @@ router.post("/update/:id", (req, res) => {
     (err) => {
       if (err) {
         // Recargar los selectores en caso de error
-        const authorsQuery = "SELECT id_author, name FROM authors WHERE state = 1";
-        const categoriesQuery = "SELECT id_category, name FROM categories WHERE state = 1";
-        const publishersQuery = "SELECT id_publisher, name FROM publishers WHERE state = 1";
+        const authorsQuery =
+          "SELECT id_author, name FROM authors WHERE state = 1";
+        const categoriesQuery =
+          "SELECT id_category, name FROM categories WHERE state = 1";
+        const publishersQuery =
+          "SELECT id_publisher, name FROM publishers WHERE state = 1";
 
         dbConn.query(authorsQuery, (err, authors) => {
           dbConn.query(categoriesQuery, (err, categories) => {
@@ -311,7 +362,7 @@ router.post("/update/:id", (req, res) => {
                 authors,
                 categories,
                 publishers,
-                messages: { error: err.message }
+                messages: { error: err.message },
               });
             });
           });
@@ -359,39 +410,47 @@ router.get("/restore", (req, res) => {
         WHERE (b.name LIKE ? OR a.name LIKE ?) AND b.state = 0`;
   const searchPattern = `%${search}%`;
 
-  dbConn.query(countQuery, [searchPattern, searchPattern], (err, countResult) => {
-    if (err)
-      return res.render("books/restore", {
-        data: [],
-        currentPage: 1,
-        totalPages: 1,
-        searchTerm: "",
-        messages: { error: err.message },
-      });
-
-    const total = countResult[0].total;
-    const totalPages = Math.ceil(total / limit);
-
-    dbConn.query(query, [searchPattern, searchPattern, limit, offset], (err, result) => {
-      if (err) {
-        res.render("books/restore", {
+  dbConn.query(
+    countQuery,
+    [searchPattern, searchPattern],
+    (err, countResult) => {
+      if (err)
+        return res.render("books/restore", {
           data: [],
           currentPage: 1,
           totalPages: 1,
           searchTerm: "",
           messages: { error: err.message },
         });
-      } else {
-        res.render("books/restore", {
-          data: result,
-          currentPage: page,
-          totalPages,
-          searchTerm: search,
-          messages: {},
-        });
-      }
-    });
-  });
+
+      const total = countResult[0].total;
+      const totalPages = Math.ceil(total / limit);
+
+      dbConn.query(
+        query,
+        [searchPattern, searchPattern, limit, offset],
+        (err, result) => {
+          if (err) {
+            res.render("books/restore", {
+              data: [],
+              currentPage: 1,
+              totalPages: 1,
+              searchTerm: "",
+              messages: { error: err.message },
+            });
+          } else {
+            res.render("books/restore", {
+              data: result,
+              currentPage: page,
+              totalPages,
+              searchTerm: search,
+              messages: {},
+            });
+          }
+        }
+      );
+    }
+  );
 });
 
 // Recuperar libro (cambiar state de 0 a 1)
